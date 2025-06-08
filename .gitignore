@@ -1,0 +1,14 @@
+# Node modules
+node_modules/
+
+# סביבות פיתוח
+.env
+.DS_Store
+
+# קבצים זמניים
+*.log
+npm-debug.log*
+
+# תוצאות בנייה
+dist/
+build/

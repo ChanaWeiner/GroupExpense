@@ -18,7 +18,8 @@ export const register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await createUser({ name, email, password: hashedPassword, paypal_email });
 
-    res.status(201).json({ message: 'User created', user: { id: newUser.id, name, email, paypal_email } });
+    const token = jwt.sign({ id: newUser.id }, JWT_SECRET, { expiresIn: '1h' });
+    res.status(201).json({ message: 'User created', token, user: { id: newUser.id, name, email, paypal_email } });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Database error' });

@@ -1,13 +1,13 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:3000/",
+  baseURL: "http://localhost:3000/api",
   headers: {
     "Content-Type": "application/json"
   }
 });
 
-export async function fetchFromServer(endpoint, method = "GET", body = null) {
+export default async function sendRequest(endpoint, method = "GET", body = null) {
   try {
     const config = {
       url: endpoint,

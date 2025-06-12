@@ -2,7 +2,7 @@ import db from '../config/db.js';
 
 export const createUser = async (user) => {
   const [result] = await db.execute(
-    'INSERT INTO users (name, email, password, paypal_email) VALUES (?, ?, ?)',
+    'INSERT INTO users (name, email, password, paypal_email) VALUES (?, ?, ?, ?)',
     [user.name, user.email, user.password, user.paypal_email]
   );
   return { id: result.insertId, ...user };

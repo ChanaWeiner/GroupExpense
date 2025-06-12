@@ -118,6 +118,77 @@ async function createTables() {
         await dbConnection.end();
     }
 }
+async function seedData() {
+  const dbConnection = await mysql.createConnection({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME
+  });
+
+  try {
+    // הכנסת משתמשים
+    const [users] = await dbConnection.query(`
+      INSERT INTO users (name, email, password, paypal_email)
+      VALUES 
+        ('חנה כהן', 'chana@example.com', 'hashed_password1', 'chana@paypal.com'),
+        ('שרה לוי', 'sara@example.com', 'hashed_password2', NULL),
+        ('רות בן דוד', 'ruth@example.com', 'hashed_password3', 'ruth@paypal.com');
+    `);
+
+    // הכנסת קבוצה
+    const [group] = await dbConnection.query(`
+      INSERT INTO \`groups\` (name, created_by)
+      VALUES ('טיול לצפון', 1);
+    `);
+
+    // הכנסת חברי קבוצה
+    await dbConnection.query(`
+      INSERT INTO group_members (group_id, user_id, is_admin)
+      VALUES 
+        (1, 1, TRUE),
+        (1, 2, FALSE),
+        (1, 3, FALSE);
+    `);
+
+    // הכנסת הוצאה
+    await dbConnection.query(`
+      INSERT INTO expenses (group_id, paid_by, total_amount, description, date)
+      VALUES (1, 1, 300.00, 'לינה בצימר', '2025-06-01');
+    `);
+
+    // הכנסת פרטי הוצאה
+    await dbConnection.query(`
+      INSERT INTO expense_items (expense_id, for_user_id, amount, note)
+      VALUES 
+        (1, 1, 100.00, 'חנה'),
+        (1, 2, 100.00, 'שרה'),
+        (1, 3, 100.00, 'רות');
+    `);
+
+    // הכנסת חובות
+    await dbConnection.query(`
+      INSERT INTO debts (expense_id, from_user_id, to_user_id, amount)
+      VALUES 
+        (1, 2, 1, 100.00),
+        (1, 3, 1, 100.00);
+    `);
+
+    // הכנסת תשלום אחד לדוגמה
+    await dbConnection.query(`
+      INSERT INTO payments (from_user_id, to_user_id, amount, method, debt_id)
+      VALUES 
+        (2, 1, 100.00, 'paypal', 1);
+    `);
+
+    console.log('✅ נתוני דוגמה הוזנו בהצלחה!');
+  } catch (error) {
+    console.error('❌ שגיאה בהזנת נתונים:', error);
+  } finally {
+    await dbConnection.end();
+  }
+}
 
 // createDatabase();
 // createTables();
+seedData();

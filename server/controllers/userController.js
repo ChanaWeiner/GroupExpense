@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { validationResult } from 'express-validator';
-import { createUser, findUserByEmail, updateUserById } from '../models/userModel.js';
+import { createUser, getUserByEmail, updateUserById } from '../models/userModel.js';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -12,7 +12,7 @@ export const register = async (req, res) => {
 
     const { name, email, password, paypal_email } = req.body;
 
-    const existingUser = await findUserByEmail(email);
+    const existingUser = await getUserByEmail(email);
     if (existingUser) return res.status(400).json({ message: 'Email already in use' });
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -33,7 +33,7 @@ export const login = async (req, res) => {
 
     const { email, password } = req.body;
 
-    const user = await findUserByEmail(email);
+    const user = await getUserByEmail(email);
     if (!user) return res.status(400).json({ message: 'Incorrect email or password. Please try again.' });
 
     const isMatch = await bcrypt.compare(password, user.password);

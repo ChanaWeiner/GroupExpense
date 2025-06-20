@@ -7,3 +7,8 @@
   font-variation-settings:
     "wdth" 100;
 }
+:root {
+  --blue: #1376D0;
+  --yellow: #FED52F;
+  --orange: #FF5D32;
+}

@@ -4,7 +4,7 @@ import PayPalCheckout from './components/PayPalCheckout'
 import Login from './components/login'
 import Register from './components/register'
 import App from './components/App'
-import { AuthProvider } from './context/AuthContext'; // הנתיב בהתאם
+import { AuthProvider } from './components/context/AuthContext'; // הנתיב בהתאם
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

@@ -8,12 +8,12 @@ export const createUser = async (user) => {
   return { id: result.insertId, ...user };
 };
 
-export const findUserByEmail = async (email) => {
+export const getUserByEmail = async (email) => {
   const [rows] = await db.execute('SELECT * FROM users WHERE email = ?', [email]);
   return rows[0];
 };
 
-export const findUserById = async (id) => {
+export const getUserById = async (id) => {
   const [rows] = await db.execute('SELECT * FROM users WHERE id = ?', [id]);
   return rows[0];
 };

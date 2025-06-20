@@ -1,0 +1,31 @@
+.overview-nav {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.overview-nav button {
+  background-color: #3498db;
+  color: white;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.overview-nav button:hover {
+  background-color: #2980b9;
+}
+
+.overview-grid section {
+  margin-bottom: 2rem;
+}
+
+.dashboard-overview {
+  max-width: 800px; /* או כל רוחב שמתאים לך */
+  margin: 0 auto;   /* מרכז את הקופסה באמצע */
+  padding: 2rem;
+}

@@ -12,3 +12,6 @@ npm-debug.log*
 # תוצאות בנייה
 dist/
 build/
+
+# קבצי מערכת
+config/google-credentials.json

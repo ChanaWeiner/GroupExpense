@@ -1,0 +1,34 @@
+.members-list {
+  margin-top: 2rem;
+  background-color: #f9fafb;
+  border-radius: 1rem;
+  padding: 1rem;
+}
+
+.member-card {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.member-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-left: 12px;
+}
+
+.member-name {
+  font-weight: 500;
+  color: #333;
+  flex-grow: 1;
+}
+
+.admin-badge {
+  background-color: #6366f1;
+  color: white;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+}

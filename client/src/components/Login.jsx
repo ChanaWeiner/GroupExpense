@@ -27,11 +27,11 @@ export default function Login() {
         const trimmedValue = value.trim();
 
         if (name === 'email') {
-            if (!trimmedValue) error = 'Email is required.';
-            else if (!/\S+@\S+\.\S+/.test(trimmedValue)) error = 'Invalid email format.';
+            if (!trimmedValue) error = 'חובה למלא דוא"ל.';
+            else if (!/\S+@\S+\.\S+/.test(trimmedValue)) error = 'פורמט דוא"ל לא תקין.';
         } else if (name === 'password') {
-            if (!trimmedValue) error = 'Password is required.';
-            else if (trimmedValue.length < 6) error = 'Password must be at least 6 characters long.';
+            if (!trimmedValue) error = 'חובה למלא סיסמה.';
+            else if (trimmedValue.length < 6) error = 'הסיסמה חייבת להיות באורך של לפחות 6 תווים.';
         }
         setErrors(prev => ({ ...prev, [name]: error }));
     };
@@ -41,16 +41,16 @@ export default function Login() {
         const trimmedEmail = formData.email.trim();
         const trimmedPassword = formData.password.trim();
 
-        if (!trimmedEmail) newErrors.email = 'Email is required.';
-        else if (!/\S+@\S+\.\S+/.test(trimmedEmail)) newErrors.email = 'Invalid email format.';
+        if (!trimmedEmail) newErrors.email = 'חובה למלא דוא"ל.';
+        else if (!/\S+@\S+\.\S+/.test(trimmedEmail)) newErrors.email = 'פורמט דוא"ל לא תקין.';
 
-        if (!trimmedPassword) newErrors.password = 'Password is required.';
-        else if (trimmedPassword.length < 6) newErrors.password = 'Password must be at least 6 characters long.';
+        if (!trimmedPassword) newErrors.password = 'חובה למלא סיסמה.';
+        else if (trimmedPassword.length < 6) newErrors.password = 'הסיסמה חייבת להיות באורך של לפחות 6 תווים.';
 
         setErrors(newErrors);
 
         if (Object.keys(newErrors).length !== 0) {
-            throw new Error('Form validation failed');
+            throw new Error('האימות נכשל');
         }
     };
 
@@ -64,25 +64,25 @@ export default function Login() {
                 password: formData.password.trim(),
             };
             const response = await sendRequest('users/login', 'POST', cleanedData);
-            setMessage(response.message || 'Login successful!');
+            setMessage(response.message || 'התחברות הצליחה!');
             if (response.user) {
                 login(response.token, response.user);
                 navigate('/dashboard');
             }
         }
         catch (error) {
-            setMessage(error.message || 'Login failed. Please try again.');
+            setMessage(error.message || 'התחברות נכשלה. אנא נסה שוב.');
         }
     };
 
     return (
-        <form onSubmit={handleSubmit} noValidate>
-            <h2>Login</h2>
+        <form onSubmit={handleSubmit} noValidate dir="rtl">
+            <h2>התחברות</h2>
 
             <input
                 name="email"
                 type="email"
-                placeholder="Email"
+                placeholder="דואר אלקטרוני"
                 value={formData.email}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -92,17 +92,17 @@ export default function Login() {
             <input
                 name="password"
                 type="password"
-                placeholder="Password"
+                placeholder="סיסמה"
                 value={formData.password}
                 onChange={handleChange}
                 onBlur={handleBlur}
             />
             <p className="error">{errors.password || '\u00A0'}</p>
 
-            <button type="submit">Login</button>
+            <button type="submit">התחבר</button>
 
             {message && <p>{message}</p>}
-            <Link to="/register" className='link'>Don't have an account? Register here</Link>
+            <Link to="/register" className='link'>אין לך חשבון? הירשם כאן</Link>
         </form>
     );
 }

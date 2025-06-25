@@ -1,0 +1,24 @@
+.group-nav {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.group-nav a {
+  padding: 0.5rem 1rem;
+  background: #f0f0f0;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #333;
+}
+
+.group-nav a:hover {
+  background: #d0d0ff;
+}
+
+.group-content {
+  padding: 1rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 0 5px #ccc;
+}

@@ -25,3 +25,14 @@ export const updateUserById = async (id, name, email, paypal_email) => {
   );
   return result;
 };
+
+export async function searchUsersByEmailOrName(query) {
+  const [rows] = await db.query(`
+    SELECT id, name, email FROM users
+    WHERE email LIKE ? OR name LIKE ?
+    LIMIT 10
+  `, [`%${query}%`, `%${query}%`]);
+
+  return rows;
+};
+

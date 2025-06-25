@@ -5,7 +5,7 @@ import { getUserData } from '../controllers/userDataController.js';
 
 const router = express.Router();
 // Route to get user data
-router.get('/:id', verifyToken, getUserData);
+router.get('', verifyToken, getUserData);
 // Route to update user data
 // router.put('/:id', verifyToken, updateUserData);
 

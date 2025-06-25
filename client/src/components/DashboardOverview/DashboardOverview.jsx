@@ -12,7 +12,7 @@ import '../../styles/Overview.css';
 
 export default function DashboardOverview() {
   const [isLoading, setIsLoading] = useState(true);
-  const { user, token } = useAuth();
+  const { token } = useAuth();
 
   const [balance, setBalance] = useState({
     totalCredit: 0,
@@ -22,7 +22,7 @@ export default function DashboardOverview() {
   const [recentDebts, setRecentDebts] = useState([]);
   const [overDueDebts, setOverDueDebts] = useState([]);
 
-  // refs for section scrolling
+  // refs לגלילה בין מקטעים
   const actionsRef = useRef(null);
   const groupRef = useRef(null);
   const remindersRef = useRef(null);
@@ -38,7 +38,7 @@ export default function DashboardOverview() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await sendRequest(`/userData/${user.id}`, "GET", null, token);
+        const response = await sendRequest(`/userData`, "GET", null, token);
         setBalance({
           totalCredit: response.totalCredit || 0,
           owedToYou: response.owedToYou || 0,
@@ -47,7 +47,7 @@ export default function DashboardOverview() {
         setRecentDebts(response.recentDebts || []);
         setOverDueDebts(response.overDueDebts || []);
       } catch (error) {
-        console.error("Error fetching dashboard data:", error);
+        console.error("שגיאה בטעינת הנתונים:", error);
       } finally {
         setIsLoading(false);
       }
@@ -57,25 +57,25 @@ export default function DashboardOverview() {
   }, []);
 
   return (
-    <div className="dashboard-overview">
-      <h2 className="overview-title">Dashboard Overview</h2>
+    <div className="dashboard-overview" dir="rtl">
+      <h2 className="overview-title">סקירת לוח בקרה</h2>
 
-      {/* ניווט פנימי לעוגנים */}
+      {/* ניווט בין מקטעים */}
       <nav className="overview-nav">
-        <button onClick={() => scrollToSection(actionsRef)}>Quick Actions</button>
-        <button onClick={() => scrollToSection(groupRef)}>Group</button>
-        <button onClick={() => scrollToSection(remindersRef)}>Reminders</button>
-        <button onClick={() => scrollToSection(balanceRef)}>Balance</button>
-        <button onClick={() => scrollToSection(debtsRef)}>Debts</button>
+        <button onClick={() => scrollToSection(actionsRef)}>פעולות מהירות</button>
+        <button onClick={() => scrollToSection(groupRef)}>קבוצות</button>
+        <button onClick={() => scrollToSection(remindersRef)}>תזכורות</button>
+        <button onClick={() => scrollToSection(balanceRef)}>יתרה</button>
+        <button onClick={() => scrollToSection(debtsRef)}>חובות</button>
       </nav>
 
       {/* תיאור פתיחה */}
       <div className="overview-description">
-        <p>Welcome to your dashboard! Here you can manage your account, view statistics, and access various features.</p>
-        <p>You can go to groups in order to create new group or to see updates in your groups.</p>
+        <p>ברוך הבא ללוח הבקרה שלך! כאן תוכל לנהל את החשבון שלך, לצפות בסטטיסטיקות ולבצע פעולות שונות.</p>
+        <p>ניתן לעבור לעמוד הקבוצות כדי ליצור קבוצה חדשה או לצפות בעדכונים בקבוצות שלך.</p>
       </div>
 
-      {/* תוכן הדשבורד */}
+      {/* תוכן לוח הבקרה */}
       <div className="overview-grid">
 
         <section ref={actionsRef}>
@@ -83,7 +83,7 @@ export default function DashboardOverview() {
         </section>
 
         <section ref={groupRef}>
-          <GroupSummary currentGroup={user.currentGroup} />
+          <GroupSummary />
         </section>
 
         <section ref={remindersRef}>

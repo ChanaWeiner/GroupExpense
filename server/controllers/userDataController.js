@@ -6,12 +6,7 @@ import {
 } from '../models/debtModel.js';
 
 export async function getUserData(req, res) {
-  const userId =req.params.id;
-  const user = req.user;
-
-  if (user.id !== Number(userId)) {
-    return res.status(403).json({ message: 'Access denied' });
-  }
+  const userId = req.user.id;
 
   try {
     const userOwedDebts = await getUserOwedDebts(userId);
@@ -32,6 +27,6 @@ export async function getUserData(req, res) {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Database error' });
+    res.status(500).json({ message: 'שגיאת מסד נתונים' });
   }
 }

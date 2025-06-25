@@ -42,9 +42,10 @@ export default function ExpenseFramePage() {
 
   const handleAddExpense = (newExpense) => {
     setExpenses(prev => [...prev, newExpense]);
+    fetchData();
   };
 
-  const totalAmount = expenses.reduce((sum, e) => sum + e.amount, 0);
+  const totalAmount = expenses.reduce((sum, e) => sum + Number(e.total_amount || 0), 0);
 
   if (isLoading) return <p>טוען את מסגרת ההוצאה...</p>;
   if (error) return <p style={{ color: 'red' }}>{error}</p>;

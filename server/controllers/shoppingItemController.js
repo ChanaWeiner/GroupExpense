@@ -1,5 +1,6 @@
 import {
   getAllByFrame,
+  getUnpurchasedByFrame,
   getById,
   create,
   update,
@@ -9,13 +10,24 @@ import {
 // שליפת כל פריטי הקניות למסגרת מסוימת
 export const getItemsByFrame = async (req, res) => {
   const { frame_id } = req.params;
+  const { filter } = req.query;
+
   try {
-    const data = await getAllByFrame(frame_id);
+    let data;
+    if (filter === 'unpurchased') {
+      data = await getUnpurchasedByFrame(frame_id);
+    } else {
+      data = await getAllByFrame(frame_id);
+    }
+
     res.json(data);
   } catch {
     res.status(500).json({ message: "שגיאה בטעינת רשימת הקניות" });
   }
 };
+
+
+
 
 // שליפה לפי מזהה פריט
 export const getItemById = async (req, res) => {

@@ -2,11 +2,44 @@ import db from '../config/db.js';
 
 export const getAllByFrame = async (frameId) => {
   const [rows] = await db.query(
-    `SELECT * FROM shopping_items WHERE frame_id = ? ORDER BY is_purchased, id`,
+    `
+    SELECT 
+      si.*,
+      ei.id IS NOT NULL AS is_purchased,
+      ei.amount AS purchased_amount,
+      e.id AS expense_id,
+      e.date AS purchase_date,
+      e.total_amount,
+      e.description AS expense_description,
+      e.receipt_url
+    FROM shopping_items si
+    LEFT JOIN expense_items ei ON ei.shopping_item_id = si.id
+    LEFT JOIN expenses e ON ei.expense_id = e.id
+    WHERE si.frame_id = ?
+    `,
     [frameId]
   );
   return rows;
 };
+
+export const getUnpurchasedByFrame = async (frameId) => {
+  const [rows] = await db.query(
+    `
+    SELECT *
+    FROM shopping_items si
+    WHERE si.frame_id = ?
+      AND NOT EXISTS (
+        SELECT 1
+        FROM expense_items ei
+        WHERE ei.shopping_item_id = si.id
+      )
+    `,
+    [frameId]
+  );
+  return rows;
+};
+
+
 
 export const getById = async (id) => {
   const [rows] = await db.query(

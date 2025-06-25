@@ -2,7 +2,7 @@ import db from '../config/db.js';
 
 export const getAllByFrame = async (groupId, frameId) => {
   const [rows] = await db.query(
-    `SELECT * FROM expenses WHERE group_id = ? AND frame_id = ?`,
+    `SELECT * FROM expenses WHERE frame_id = ?`,
     [groupId, frameId]
   );
   return rows;
@@ -16,23 +16,23 @@ export const getById = async (groupId, frameId, expenseId) => {
   return rows[0];
 };
 
-export const create = async ({ group_id, frame_id, paid_by, total_amount, description, date }) => {
-  const [result] = await db.query(
-    `INSERT INTO expenses (group_id, frame_id, paid_by, total_amount, description, date)
-     VALUES (?, ?, ?, ?, ?, ?)`,
-    [group_id, frame_id, paid_by, total_amount, description, date]
+export const createExpense = async ({ frame_id, paid_by, total_amount, description, date, receipt_path }, connection) => {
+  const [result] = await connection.query(
+    `INSERT INTO expenses (frame_id, paid_by, total_amount, description, date, receipt_url)
+     VALUES ( ?, ?, ?, ?, ?, ?)`,
+    [frame_id, paid_by, total_amount, description, date, receipt_path]
   );
-
-  return {
-    id: result.insertId,
-    group_id,
-    frame_id,
-    paid_by,
-    total_amount,
-    description,
-    date
-  };
+  return { id: result.insertId, frame_id, paid_by, total_amount, description, date, receipt_path };
 };
+
+export const createExpenseItem = async (expense_id, shopping_item_id, amount, connection) => {
+  await connection.query(
+    `INSERT INTO expense_items (expense_id, shopping_item_id, amount)
+     VALUES (?, ?, ?)`,
+    [expense_id, shopping_item_id, amount]
+  );
+};
+
 
 export const update = async (groupId, frameId, expenseId, fields) => {
   const keys = Object.keys(fields);

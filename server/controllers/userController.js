@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { validationResult } from 'express-validator';
-import { createUser, getUserByEmail, updateUserById,searchUsersByEmailOrName } from '../models/userModel.js';
+import { createUser, getUserByEmail, updateUserById,searchUsersByEmailOrName,getUserById } from '../models/userModel.js';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -96,3 +96,15 @@ export const searchUsers = async (req, res) => {
     res.status(500).json({ message: 'שגיאה בשרת' });
   }
 };
+
+export const getUser = async(req,res)=>{
+  const id = req.user.id;
+  try {
+    const user = await getUserById(id);
+    if (!user) return res.status(404).json({ message: 'משתמש לא נמצא' });
+    res.json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'שגיאת מסד נתונים' });
+  }
+}

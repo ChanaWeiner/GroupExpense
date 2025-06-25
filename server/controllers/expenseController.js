@@ -1,11 +1,13 @@
 import {
-  create,
   getAllByFrame,
   getById,
   update,
   remove,
   search
 } from '../models/expenseModel.js';
+
+import db from '../config/db.js';
+
 
 // ✅ שליפה לפי מזהה מסגרת
 export const getExpensesByFrame = async (req, res) => {
@@ -32,29 +34,82 @@ export const getExpenseById = async (req, res) => {
   }
 };
 
-// ✅ יצירת הוצאה חדשה למסגרת
+import mysql from 'mysql2/promise';
+import * as expenseModel from '../models/expenseModel.js';
+import * as debtModel from '../models/debtModel.js';
+import * as memberModel from '../models/groupMemberModel.js';
+
 export const createExpense = async (req, res) => {
-  const { frame_id } = req.params;
+  const { frame_id, group_id } = req.params;
   const paid_by = req.user.id;
   const { total_amount, description, date } = req.body;
-
-  if (!total_amount || isNaN(total_amount)) {
-    return res.status(400).json({ message: "סכום אינו תקין" });
-  }
+  let items;
 
   try {
-    const newExpense = await create({
+    items = JSON.parse(req.body.items);
+  } catch {
+    return res.status(400).json({ message: 'פריטים אינם בפורמט תקין' });
+  }
+
+  if (!description || !total_amount || isNaN(total_amount)) {
+    return res.status(400).json({ message: 'שדות חסרים או סכום אינו תקין' });
+  }
+
+  if (!Array.isArray(items) || items.length === 0) {
+    return res.status(400).json({ message: 'יש לבחור לפחות פריט אחד' });
+  }
+
+  const connection = await db.getConnection();
+  await connection.beginTransaction();
+
+  try {
+    // ⚠ ולידציה שהסכומים מסתכמים בדיוק לסכום הכולל
+    const sumOfItems = items.reduce((sum, item) => sum + parseFloat(item.amount || 0), 0);
+    if (Math.abs(sumOfItems - total_amount) > 0.01) {
+      throw new Error('סכום הפריטים אינו תואם לסכום הכולל');
+    }
+
+    // ⚠ ולידציה שהפריטים שייכים למסגרת
+    const [validItems] = await connection.query(
+      `SELECT id FROM shopping_items WHERE frame_id = ? AND id IN (${items.map(() => '?').join(',')})`,
+      [frame_id, ...items.map(i => i.id)]
+    );
+    const validItemIds = validItems.map(row => row.id);
+    if (validItemIds.length !== items.length) {
+      throw new Error('פריטים מסוימים אינם שייכים למסגרת זו');
+    }
+
+    const receipt_path = req.file?.path || null;
+
+    const newExpense = await expenseModel.createExpense({
       frame_id,
       paid_by,
       total_amount,
       description,
-      date: date || new Date().toISOString().split('T')[0]
-    });
+      date: date || new Date().toISOString().split('T')[0],
+      receipt_path
+    }, connection);
+
+    for (const item of items) {
+      await expenseModel.createExpenseItem(newExpense.id, item.id, item.amount, connection);
+    }
+
+    const numOfMembers = await memberModel.getNumOfMembersInGroup(group_id, connection);
+    const debtPerUser = total_amount / numOfMembers;
+
+    await debtModel.createDebtsForGroup(group_id, newExpense.id, paid_by, debtPerUser, connection);
+
+    await connection.commit();
     res.status(201).json(newExpense);
-  } catch {
-    res.status(500).json({ message: "שגיאה ביצירת הוצאה" });
+  } catch (err) {
+    await connection.rollback();
+    console.error(err);
+    res.status(500).json({ message: err.message || 'שגיאה ביצירת הוצאה' });
+  } finally {
+    await connection.release();
   }
 };
+
 
 // ✅ עדכון הוצאה
 export const updateExpense = async (req, res) => {

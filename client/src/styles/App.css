@@ -9,9 +9,9 @@
   direction: rtl;
 }
 :root {
-  --blue: #1376D0;
-  --yellow: #FED52F;
-  --orange: #FF5D32;
+  --blue: #0073FF;
+  --yellow: #23CCD5;
+  --orange: #23D56D;
 }
 
 ul {
@@ -51,4 +51,13 @@ form{
   display: flex;
   flex-direction: row;
   gap: 1rem;
+}
+
+h2{
+  font-size: 50px;
+}
+
+p{
+  font-size: 30px;
+  font-weight: 600;
 }

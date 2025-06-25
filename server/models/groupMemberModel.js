@@ -43,3 +43,11 @@ export const isMemberInGroup = async(group_id, user_id)=> {
   return rows.length > 0;
 }
 
+export const getNumOfMembersInGroup = async(group_id,connection)=> {
+  const [rows] = await connection.query(
+    'SELECT COUNT(*) AS count FROM group_members WHERE group_id = ?',
+    [group_id]
+  );
+  return rows[0].count;
+}
+

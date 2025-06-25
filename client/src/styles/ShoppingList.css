@@ -16,3 +16,10 @@
     display: flex;
     gap: 1rem;
 }
+
+.purchase-details {
+  transition: all 0.3s ease;
+  direction: rtl;
+  font-size: 0.9rem;
+  color: #333;
+}

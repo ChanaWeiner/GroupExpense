@@ -4,20 +4,23 @@ const axiosInstance = axios.create({
   baseURL: "http://localhost:3000/api"
 });
 
-export default async function sendRequest(endpoint, method = "GET", body = null, token = null) {
+export default async function sendRequest(endpoint, method = "GET", body = null, token = null, isFormData = false) {
   try {
     const headers = {};
 
     if (token) headers["Authorization"] = `Bearer ${token}`;
-    if (!(body instanceof FormData)) headers["Content-Type"] = "application/json";
+    if (!isFormData) headers["Content-Type"] = "application/json";
+
     const config = {
       url: endpoint,
       method,
       headers,
-    }
+    };
+
     if (body) {
-      config.data = body;
+      config.data = isFormData ? body : JSON.stringify(body);
     }
+
     const response = await axiosInstance(config);
     return response.data;
   } catch (error) {
@@ -27,8 +30,7 @@ export default async function sendRequest(endpoint, method = "GET", body = null,
       const data = error.response.data;
 
       if (data.message) {
-      console.error("message:", data.message);
-
+        console.error("message:", data.message);
         throw new Error(data.message);
       }
 
@@ -40,5 +42,4 @@ export default async function sendRequest(endpoint, method = "GET", body = null,
 
     throw error; // זריקה של שגיאה גנרית אם אין הודעה מפורטת
   }
-
 }

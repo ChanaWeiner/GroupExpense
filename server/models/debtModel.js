@@ -51,3 +51,20 @@ export async function getOverdueDebts(userId, days = 14) {
   const [rows] = await db.query(query, [userId, userId, days]);
   return rows;
 }
+
+// דוגמה פשוטה: יוצרים חוב לכל משתמש בקבוצה, מחלקים שווה בשווה
+export const createDebtsForGroup = async (group_id, expense_id, to_user_id, debtPerUser, connection) => {
+  const [users] = await connection.query(
+    `SELECT user_id FROM group_members WHERE group_id = ?`,
+    [group_id]
+  );
+  for (const user of users) {
+    if (user.user_id === to_user_id) continue;
+    await connection.query(
+      `INSERT INTO debts (expense_id, from_user_id, to_user_id, amount, created_at, paid_at, status)
+       VALUES (?, ?, ?, ?, NOW(), NULL, 'open')`,
+      [expense_id, user.user_id, to_user_id, debtPerUser]
+    );
+  }
+};
+

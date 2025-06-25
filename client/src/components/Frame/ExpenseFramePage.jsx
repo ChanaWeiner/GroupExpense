@@ -54,9 +54,9 @@ export default function ExpenseFramePage() {
     <div className="expense-frame-page">
       <FrameHeader frame={frame} total={totalAmount} />
       <FrameSummary total={totalAmount} expenses={expenses} />
-      <ExpenseList expenses={expenses} isAdmin={isAdmin} token={token} frameId={frameId} onDeleteExpense={id => setExpenses(prev => prev.filter(e => e.id !== id))} />
-      <AddExpenseForm frameId={frameId} onAdd={handleAddExpense} token={token} />
-      <ShoppingList frameId={frameId} isAdmin={isAdmin} token={token} />
+      {/* <ExpenseList expenses={expenses} isAdmin={isAdmin} frameId={frameId} onDeleteExpense={id => setExpenses(prev => prev.filter(e => e.id !== id))} /> */}
+      <AddExpenseForm frameId={frameId} onAdd={handleAddExpense} />
+      <ShoppingList frameId={frameId} isAdmin={isAdmin}/>
     </div>
   );
 }

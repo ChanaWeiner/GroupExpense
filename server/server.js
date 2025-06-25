@@ -5,6 +5,7 @@ import userDataRoutes from './routes/userDataRoutes.js';
 import groupRoutes from './routes/groupRoutes.js';
 import expenseFrameRoutes from './routes/expenseFrameRoutes.js';
 import expenseRoutes from './routes/expenseRoutes.js';
+import shoppingItemRoutes  from './routes/shoppingItemRoutes.js';
 
 import cors from 'cors';
 
@@ -18,6 +19,7 @@ app.use('/api/userData', userDataRoutes);
 app.use('/api/groups', groupRoutes);
 app.use('/api/frames', expenseFrameRoutes);
 app.use('/api/expenses', expenseRoutes);
+app.use('/api/shopping-items', shoppingItemRoutes);
 
 
 app.listen(3000, () => {

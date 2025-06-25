@@ -8,7 +8,7 @@ import DashboardOverview from './DashboardOverview/DashboardOverview';
 import GroupsPage from './Group/GroupsPage';
 import GroupPage from './Group/GroupPage';
 import GroupMembers from './Group/GroupMembers';
-import GroupExpenseFrames from './Group/ExpenseFrames';
+import GroupExpenseFrames from './Frame/ExpenseFrames';
 import ExpenseFramePage from './Frame/ExpenseFramePage';
 import GroupSummary from './Group/GroupSummary';
 import RequireAuth from './ProtectedRoutes/RequireAuth';

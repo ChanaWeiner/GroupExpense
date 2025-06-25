@@ -1,0 +1,18 @@
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5em; /* רווח בין ה-checkbox לכתב */
+}
+
+.item-card{
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    width: 30%;
+}
+
+.item-actions{
+    display: flex;
+    gap: 1rem;
+}

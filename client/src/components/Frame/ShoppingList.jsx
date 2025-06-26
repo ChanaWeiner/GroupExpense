@@ -88,15 +88,14 @@ export default function ShoppingList({ frameId, isAdmin }) {
   if (loading) return <p>טוען רשימת קניות...</p>;
 
   return (
-    <section className="shopping-list" style={{ padding: '1rem', borderTop: '1px solid #ccc' }}>
+    <section className="shopping-list">
       <h3>רשימת קניות</h3>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p style={{ color: 'var(--color-error)' }}>{error}</p>}
       <ul>
         {items.map(item => (
-          // בתוך המפה של items.map(item => ...)
-          <li key={item.id} style={{ marginBottom: '0.5rem' }}>
+          <li key={item.id}>
             {editingId === item.id ? (
-              <form style={{ marginRight: '1rem' }}>
+              <form>
                 <input
                   value={editValues.name}
                   onChange={e => setEditValues({ ...editValues, name: e.target.value })}
@@ -106,8 +105,8 @@ export default function ShoppingList({ frameId, isAdmin }) {
                   onChange={e => setEditValues({ ...editValues, note: e.target.value })}
                   placeholder="הערה"
                 />
-                <button onClick={() => handleUpdateItem(item.id)}>שמור</button>
-                <button onClick={() => setEditingId(null)}>בטל</button>
+                <button type="button" onClick={() => handleUpdateItem(item.id)}>שמור</button>
+                <button type="button" onClick={() => setEditingId(null)}>בטל</button>
               </form>
             ) : (
               <div className="item-card">
@@ -115,21 +114,20 @@ export default function ShoppingList({ frameId, isAdmin }) {
                   <input type="checkbox" checked={item.is_purchased} readOnly />
                   {item.name}
                 </label>
-                {item.note && <p style={{ fontStyle: 'italic' }}>הערה: {item.note}</p>}
+                {item.note && <p>הערה: {item.note}</p>}
 
                 {item.is_purchased && (
                   <>
-                    <button onClick={() => toggleExpanded(item.id)} style={{ marginTop: '0.25rem' }}>
+                    <button type="button" onClick={() => toggleExpanded(item.id)}>
                       {expandedItemId === item.id ? 'הסתר פרטי קנייה' : 'הצג פרטי קנייה'}
                     </button>
                     {expandedItemId === item.id && (
-                      <div className="purchase-details" style={{ marginTop: '0.5rem', padding: '0.5rem', background: '#f1f1f1', borderRadius: '0.5rem' }}>
+                      <div className="purchase-details">
                         <p><strong>תאריך:</strong> {item.purchase_date}</p>
                         <p><strong>סכום שנקנה:</strong> {item.purchased_amount} ₪</p>
                         {item.expense_description && <p><strong>תיאור ההוצאה:</strong> {item.expense_description}</p>}
                         {item.receipt_url && (
                           <img width="400" src={`http://localhost:3000/${item.receipt_url}`} alt="קבלה" />
-
                         )}
                       </div>
                     )}
@@ -138,40 +136,36 @@ export default function ShoppingList({ frameId, isAdmin }) {
 
                 {!item.is_purchased && (
                   <div className="item-actions">
-                    <button onClick={() => {
+                    <button type="button" onClick={() => {
                       setEditingId(item.id);
                       setEditValues({ name: item.name, note: item.note || '' });
                     }}>
                       ערוך
                     </button>
-                    <button onClick={() => handleDeleteItem(item.id)}>מחק</button>
+                    <button type="button" onClick={() => handleDeleteItem(item.id)}>מחק</button>
                   </div>
                 )}
               </div>
             )}
           </li>
-
         ))}
       </ul>
 
-      <form style={{ marginTop: '1rem' }}>
+      <form>
         <input
           type="text"
           placeholder="הוסף פריט חדש"
           value={newItem}
           onChange={e => setNewItem(e.target.value)}
-          style={{ marginBottom: '0.5rem', display: 'block' }}
         />
         <textarea
           placeholder="הוסף הערה לפריט (אופציונלי)"
           value={newNote}
           onChange={e => setNewNote(e.target.value)}
           rows={3}
-          style={{ width: '100%', marginBottom: '0.5rem' }}
         />
-        <button onClick={handleAddItem}>הוסף</button>
+        <button type="button" className="add-btn" onClick={handleAddItem}>הוסף</button>
       </form>
-
     </section>
   );
 }

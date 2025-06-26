@@ -1,10 +1,7 @@
-import {
-  getAllByFrame,
-  getById,
-  update,
-  remove,
-  search
-} from '../models/expenseModel.js';
+
+import * as expenseModel from '../models/expenseModel.js';
+import * as debtModel from '../models/debtModel.js';
+import * as memberModel from '../models/groupMemberModel.js';
 
 import db from '../config/db.js';
 
@@ -14,7 +11,7 @@ export const getExpensesByFrame = async (req, res) => {
   const { frame_id } = req.params;
 
   try {
-    const data = await getAllByFrame(frame_id);
+    const data = await expenseModel.getAllByFrame(frame_id);
     res.json(data);
   } catch {
     res.status(500).json({ message: "שגיאה בטעינת ההוצאות מהמסגרת" });
@@ -26,7 +23,7 @@ export const getExpenseById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const expense = await getById(id);
+    const expense = await expenseModel.getById(id);
     if (!expense) return res.status(404).json({ message: "הוצאה לא נמצאה" });
     res.json(expense);
   } catch {
@@ -34,10 +31,7 @@ export const getExpenseById = async (req, res) => {
   }
 };
 
-import mysql from 'mysql2/promise';
-import * as expenseModel from '../models/expenseModel.js';
-import * as debtModel from '../models/debtModel.js';
-import * as memberModel from '../models/groupMemberModel.js';
+
 
 export const createExpense = async (req, res) => {
   const { frame_id, group_id } = req.params;
@@ -69,17 +63,16 @@ export const createExpense = async (req, res) => {
       throw new Error('סכום הפריטים אינו תואם לסכום הכולל');
     }
 
-    // ⚠ ולידציה שהפריטים שייכים למסגרת
-    const [validItems] = await connection.query(
-      `SELECT id FROM shopping_items WHERE frame_id = ? AND id IN (${items.map(() => '?').join(',')})`,
-      [frame_id, ...items.map(i => i.id)]
-    );
-    const validItemIds = validItems.map(row => row.id);
-    if (validItemIds.length !== items.length) {
+    // ⚠ ולידציה שהפריטים שייכים למסגרת (עברה למודל)
+    const isValid = await expenseModel.validateItemsBelongToFrame(frame_id, items, connection);
+    if (!isValid) {
       throw new Error('פריטים מסוימים אינם שייכים למסגרת זו');
     }
 
     const receipt_path = req.file?.path || null;
+
+    const frame = await expenseModel.getFrameById(frame_id, connection); // כוללת את end_date
+    const due_date = frame?.end_date || null;
 
     const newExpense = await expenseModel.createExpense({
       frame_id,
@@ -97,7 +90,7 @@ export const createExpense = async (req, res) => {
     const numOfMembers = await memberModel.getNumOfMembersInGroup(group_id, connection);
     const debtPerUser = total_amount / numOfMembers;
 
-    await debtModel.createDebtsForGroup(group_id, newExpense.id, paid_by, debtPerUser, connection);
+    await debtModel.createDebtsForGroup(group_id, newExpense.id, paid_by, debtPerUser, due_date, connection);
 
     await connection.commit();
     res.status(201).json(newExpense);
@@ -109,6 +102,7 @@ export const createExpense = async (req, res) => {
     await connection.release();
   }
 };
+
 
 
 // ✅ עדכון הוצאה

@@ -57,17 +57,34 @@ export default function DashboardOverview() {
   }, []);
 
   return (
-    <div className="dashboard-overview" dir="rtl">
-      <h2 className="overview-title">סקירת לוח בקרה</h2>
+    <div className="dashboard-overview">
+            
+      <div className="welcome-section">
+        <h1 className="welcome-title">ברוך הבא למערכת לניהול כספים קבוצתיים</h1>
+        <p className="welcome-subtitle">
+          המערכת שתעזור לך לנהל הוצאות, חובות ותשלומים – בצורה קלה, שקופה וביחד עם כולם.
+        </p>
+        <div className="welcome-actions">
+          <button onClick={() => scrollToSection(groupRef)} className="main-button">
+            מעבר לקבוצות
+          </button>
+          <button onClick={() => scrollToSection(actionsRef)} className="secondary-button">
+            ביצוע פעולה מהירה
+          </button>
+        </div>
+      </div>
+      <div className="home-summary">
+    <h2>מה אפשר לעשות כאן?</h2>
+    <ul>
+      <li>👥 לנהל קבוצות עם חברים</li>
+      <li>💸 להוסיף הוצאות ולחלק אותן</li>
+      <li>📊 לראות חובות ותשלומים</li>
+      <li>📷 להעלות ולשמור קבלות</li>
+    </ul>
+  </div>
 
       {/* ניווט בין מקטעים */}
-      <nav className="overview-nav">
-        <button onClick={() => scrollToSection(actionsRef)}>פעולות מהירות</button>
-        <button onClick={() => scrollToSection(groupRef)}>קבוצות</button>
-        <button onClick={() => scrollToSection(remindersRef)}>תזכורות</button>
-        <button onClick={() => scrollToSection(balanceRef)}>יתרה</button>
-        <button onClick={() => scrollToSection(debtsRef)}>חובות</button>
-      </nav>
+
 
       {/* תיאור פתיחה */}
       <div className="overview-description">

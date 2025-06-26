@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import sendRequest from '../../services/serverApi';
-
+import '../../styles/AddGroupForm.css'
 export default function AddGroupForm({ onGroupCreated, onClose }) {
   const { token } = useAuth();
   const [groupName, setGroupName] = useState('');
@@ -17,9 +17,9 @@ export default function AddGroupForm({ onGroupCreated, onClose }) {
 
     setIsSubmitting(true);
     try {
-      const response = await sendRequest('groups','POST', {
+      const response = await sendRequest('groups', 'POST', {
         name: groupName,
-      },token);
+      }, token);
       setGroupName('');
       setError(null);
       onGroupCreated?.(response.group);
@@ -34,24 +34,31 @@ export default function AddGroupForm({ onGroupCreated, onClose }) {
     <form onSubmit={handleSubmit} className="add-group-form">
       <h2>🎯 יצירת קבוצה חדשה</h2>
 
-      <label>שם קבוצה:</label>
+      <label className="label">שם קבוצה:</label>
       <input
         type="text"
         value={groupName}
         onChange={(e) => setGroupName(e.target.value)}
         required
         placeholder="למשל: ועד כיתה"
+        className="input"
       />
 
       {error && <p className="error">{error}</p>}
 
-      <button type="submit" disabled={isSubmitting}>
+      <button type="submit" disabled={isSubmitting} className="submit-button">
         {isSubmitting ? "יוצר..." : "צור קבוצה"}
       </button>
 
-      <button type="button" onClick={onClose} style={{ marginLeft: '1rem' }}>
+      <button
+        type="button"
+        onClick={onClose}
+        className="cancel-button"
+        style={{ marginLeft: '1rem' }}
+      >
         ביטול
       </button>
     </form>
   );
+
 }

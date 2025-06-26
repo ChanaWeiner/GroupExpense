@@ -32,6 +32,8 @@ export const getMyDebtsStructured = async (req, res) => {
         amount: debt.amount,
         to_user_name: debt.to_user_name,
         to_user_id: debt.to_user_id,
+        paypal_email: debt.paypal_email,
+        due_date: debt.due_date,
         date: debt.date,
       });
     }

@@ -94,7 +94,7 @@ export default function GroupMembers({ }) {
   }
 
   return (
-    <div className="members-list">
+    <div className="members-list fadeInAnimation">
       <h3>👥 חברי הקבוצה</h3>
       {error && <p className="error">{error}</p>}
 

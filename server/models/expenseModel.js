@@ -67,3 +67,23 @@ export const search = async (groupId, frameId, query) => {
 
   return rows;
 };
+
+
+
+export const validateItemsBelongToFrame = async (frame_id, items, connection) => {
+  if (!items.length) return false;
+
+  // יצירת מחרוזת שאלות לפי מספר הפריטים
+  const placeholders = items.map(() => '?').join(',');
+
+  // שימוש בחיבור אם קיים, אחרת ב־db הרגיל
+  const conn = connection || db;
+
+  const [rows] = await conn.query(
+    `SELECT id FROM shopping_items WHERE frame_id = ? AND id IN (${placeholders})`,
+    [frame_id, ...items.map(i => i.id)]
+  );
+
+  const validItemIds = rows.map(row => row.id);
+  return validItemIds.length === items.length;
+};

@@ -4,33 +4,11 @@ import sendRequest from '../../services/serverApi';
 import { useAuth } from '../context/AuthContext';
 const clientId = import.meta.env.VITE_PAYPAL_CLIENT_ID;
 
-export default function PayPalCheckout({ debt }) {
+export default function PayPalCheckout({ debt,onSuccess }) {
   const { token } = useAuth();
   const [paid, setPaid] = useState(false);
   const [error, setError] = useState(null);
-  const [paypalCheck, setPaypalCheck] = useState(null);
 
-
-  useEffect(() => {
-    async function runCheck() {
-      const result = await sendRequest(
-        'users/check-paypal-accounts',
-        'POST',
-        {
-          toUserId:debt.to_user_id,
-        },
-        token
-      );
-      setPaypalCheck(result);
-    }
-    runCheck();
-  }, [ debt, token]);
-
-  if (!paypalCheck) return <div>טוען...</div>;
-
-  if (!paypalCheck.fromUserHasPaypal || !paypalCheck.toUserHasPaypal) {
-    return <div>לא ניתן לבצע תשלום כי לאחד הצדדים אין חשבון PayPal</div>;
-  }
   // פונקציה ליצירת הזמנה ב-PayPal
   function createOrder(data, actions) {
     return actions.order.create({
@@ -52,11 +30,13 @@ export default function PayPalCheckout({ debt }) {
         {
           debt_id: debt.debt_id,
           amount: debt.amount,
-          to_user_id: debt.to_user_id,
+          to_user_email: debt.paypal_email,
+          to_user_id: debt.to_user_id
         },
         token
       );
       setPaid(true);
+      onSuccess();
     } catch (err) {
       console.error(err);
       setError('שגיאה בעת שמירת התשלום');

@@ -34,9 +34,9 @@ export default function MyDebtsPage() {
   }
 
   function toggleDebtSelection(debt) {
-    setSelectedDebt(prev => (prev === debt ? null : debt));
+    if (!debt.paypal_email) return; // לא מאפשר סימון אם אין מייל פייפאל
+    setSelectedDebt(prev => (prev?.debt_id === debt.debt_id ? {} : debt));
   }
-
 
 
   if (debtsData === null) return <div>טוען...</div>;
@@ -69,20 +69,22 @@ export default function MyDebtsPage() {
                           <th>למי</th>
                           <th>תיאור</th>
                           <th>סכום</th>
+                          <th>תאריך סיום</th> {/* חדש */}
                         </tr>
                       </thead>
                       <tbody>
                         {frame.debts.map(debt => (
                           <tr
                             key={debt.debt_id}
-                            className={selectedDebt.debt_id === debt.debt_id ? 'selected-row' : ''}
+                            className={selectedDebt?.debt_id === debt.debt_id ? 'selected-row' : ''}
                             onClick={() => toggleDebtSelection(debt)}
-                            style={{ cursor: 'pointer' }}
+                            style={{ cursor: debt.paypal_email ? 'pointer' : 'not-allowed' }}
                           >
                             <td>
                               <input
                                 type="checkbox"
-                                checked={selectedDebt.debt_id === debt.debt_id}
+                                checked={selectedDebt?.debt_id === debt.debt_id}
+                                disabled={!debt.paypal_email}
                                 onChange={() => toggleDebtSelection(debt)}
                                 onClick={e => e.stopPropagation()}
                               />
@@ -90,9 +92,11 @@ export default function MyDebtsPage() {
                             <td>{debt.to_user_name}</td>
                             <td>{debt.description}</td>
                             <td>{parseFloat(debt.amount).toFixed(2)} ₪</td>
+                            <td>{debt.due_date ? new Date(debt.due_date).toLocaleDateString() : '—'}</td> {/* חדש */}
                           </tr>
                         ))}
                       </tbody>
+
 
                     </table>
                   )}
@@ -105,11 +109,11 @@ export default function MyDebtsPage() {
 
       <button
         onClick={() => setShowPayPal(true)}
-        disabled={!selectedDebt}
+        disabled={!selectedDebt.debt_id}
       >
         לתשלום
       </button>
-      {showPayPal && <PayPalCheckout debt={selectedDebt} setShowPayPal={setShowPayPal} />}
+      {showPayPal && <PayPalCheckout debt={selectedDebt} setShowPayPal={setShowPayPal} onSuccess={fetchDebts} />}
     </div>
 
   );

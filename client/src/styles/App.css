@@ -1,18 +1,29 @@
 
 * {
-  font-family: "Roboto","Heebo","Rubik", "Assistant";
+  font-family: "Roboto","Rubik", "Assistant";
   font-optical-sizing: auto;
-  font-weight:  400;
+  font-weight:  500;
   font-style: normal;
   font-variation-settings:
     "wdth" 100;
   direction: rtl;
 }
 :root {
-  --blue: #0073FF;
-  --yellow: #23CCD5;
-  --orange: #23D56D;
+  --color-primary: #0073FF;      /* צבע עיקרי - כפתורים ראשיים, קישורים */
+  --color-accent: #23CCD5;       /* דגש משני - כותרות, קישוטים */
+  --color-success: #23D56D;      /* הצלחה - הודעות חיוביות, אישורים */
+  
+  --color-warning: #FFC107;      /* אזהרה - התראות, מצבי סיכון, הודעות חשובות */
+  --color-error: #E53935;        /* שגיאה - הודעות שגיאה, טפסים לא תקינים */
+  --color-muted: #9E9E9E;        /* טקסט משני - טקסטים פחות חשובים, תוויות משניות */
+  --color-background: #F5F5F5;   /* רקע כללי - רקע של דפים וכרטיסים */
+  --color-border: #E0E0E0;       /* גבולות - קווים, גבולות של תיבות וכפתורים */
 }
+
+body{
+  margin: 0;
+}
+
 
 ul {
   list-style: none;
@@ -25,7 +36,7 @@ textarea {
   width: 100%;
   min-height: 80px;
   padding: 10px 14px;
-  border: 1.5px solid var(--blue);
+  border: 1.5px solid var(--color-primary);
   border-radius: 8px;
   font-size: 1rem;
   font-family: inherit;
@@ -38,7 +49,7 @@ textarea {
 
 textarea:focus {
   outline: none;
-  border-color: var(--orange);
+  border-color: var(--color-accent);
   box-shadow: 0 0 0 2px #fed52f55;
 }
 
@@ -47,12 +58,74 @@ form{
   border-radius: 5px;
 }
 
-.stack-panel{
-  display: flex;
-  flex-direction: row;
-  gap: 1rem;
-}
 
 h2{
   font-size: 50px;
+}
+.add-btn {
+  position: relative;
+  padding: 0.6em 1.5em;
+  font-size: 1rem;
+  font-weight: bold;
+  border: 5px solid transparent;
+  background-color: white;
+  color: var(--color-accent);
+  border-radius: 10px;
+  cursor: pointer;
+  z-index: 1;
+  overflow: hidden;
+  transition: color 0.3s ease, border-color 0.3s;
+  
+}
+
+.add-btn::before {
+  background-color: white;
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  padding: 2px;
+  background: linear-gradient(45deg, #00c6ff, #0073ff, #23d56d, #00c6ff);
+  background-size: 300% 300%;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  animation: border-glow 3s linear infinite;
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+.add-btn:hover::before {
+  opacity: 1;
+}
+
+@keyframes border-glow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.fadeInAnimation{
+  animation: fadeInPage 0.7s cubic-bezier(.4,0,.2,1);
+
+}
+
+@keyframes fadeInPage {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

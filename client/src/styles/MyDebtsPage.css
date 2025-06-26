@@ -37,3 +37,8 @@ button:disabled {
 .selected-row {
   background-color: #dff0d8; /* צבע ירקרק קליל לשורה נבחרת */
 }
+
+.disabled-row {
+  opacity: 0.5;
+  pointer-events: none;
+}

@@ -1,0 +1,56 @@
+.frame-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* או center אם את רוצה הכל ממורכז */
+  gap: 0.5em;
+  background: var(--color-background);
+  border-bottom: 2px solid var(--color-border);
+  padding: 1.5rem 1rem 1.2rem 1rem;
+  border-radius: 0 0 14px 14px;
+  box-shadow: 0 2px 12px #0073ff11;
+  margin-bottom: 1.5rem;
+  animation: fadeInPage 0.7s cubic-bezier(.4,0,.2,1);
+}
+
+.frame-header-title {
+  color: var(--color-primary);
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.frame-header-meta {
+  color: var(--color-accent);
+  font-size: 1.1rem;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.frame-header-label {
+  font-weight: bold;
+  color: var(--color-primary);
+  margin: 0 0.2em;
+}
+
+.frame-header-sep {
+  margin: 0 0.5em;
+  color: var(--color-muted);
+}
+
+.frame-header-desc {
+  color: var(--color-muted);
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.frame-header-total {
+  color: var(--color-success);
+  font-size: 1.4rem;
+  text-align: center;
+  margin: 0;
+}
+
+.frame-header-total span {
+  font-weight: bold;
+}

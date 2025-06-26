@@ -1,0 +1,109 @@
+.container {
+  max-width: 600px;      /* רוחב מקסימלי לנוחות קריאה */
+  margin: 2em auto;      /* ריווח אנכי ומרכז הדף */
+  padding: 1em;
+  background: #fff;      /* רקע לבן */
+  border-radius: 8px;
+  color: #333;
+
+}
+
+
+
+h3 {
+  text-align: center;
+  color: var(--color-primary);
+  margin-bottom: 1em;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.6em 1em;
+  font-size: 1em;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  margin-bottom: 1.2em;
+  box-sizing: border-box;
+}
+
+.button-primary {
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 0.6em 1.4em;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+  margin-bottom: 1em;
+}
+
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1em;
+}
+
+.form-group input {
+  padding: 0.5em 1em;
+  font-size: 1em;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+.form-group label {
+  margin-bottom: 0.3em;
+  font-weight: 600;
+}
+
+.error {
+  color: var(--color-error);
+  margin-top: 0.5em;
+}
+
+.frames-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.frame-card {
+  background-color: #f9f9f9;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1em 1.2em;
+  margin-bottom: 0.8em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease;
+}
+
+.frame-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 200, 200, 0.3);
+  background-color: #fff;
+}
+
+.frame-name {
+  font-weight: 600;
+  color: var(--color-primary);
+  flex-grow: 1;
+}
+
+.frame-actions button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1em;
+  color: var(--color-error);
+  margin-left: 1em;
+}
+
+.arrow-icon {
+  margin-left: 1em;
+  color: var(--color-muted);
+  font-size: 3rem;
+}

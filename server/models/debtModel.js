@@ -53,7 +53,7 @@ export async function getOverdueDebts(userId, days = 14) {
 }
 
 // דוגמה פשוטה: יוצרים חוב לכל משתמש בקבוצה, מחלקים שווה בשווה
-export const createDebtsForGroup = async (group_id, expense_id, to_user_id, debtPerUser, connection) => {
+export const createDebtsForGroup = async (group_id, expense_id, to_user_id, debtPerUser,due_date, connection) => {
   const [users] = await connection.query(
     `SELECT user_id FROM group_members WHERE group_id = ?`,
     [group_id]
@@ -61,18 +61,19 @@ export const createDebtsForGroup = async (group_id, expense_id, to_user_id, debt
   for (const user of users) {
     if (user.user_id === to_user_id) continue;
     await connection.query(
-      `INSERT INTO debts (expense_id, from_user_id, to_user_id, amount, created_at, paid_at, status)
-       VALUES (?, ?, ?, ?, NOW(), NULL, 'open')`,
-      [expense_id, user.user_id, to_user_id, debtPerUser]
+      `INSERT INTO debts (expense_id, from_user_id, to_user_id, amount, created_at,due_date, paid_at, status)
+       VALUES (?, ?, ?, ?, NOW(),?, NULL, 'open')`,
+      [expense_id, user.user_id, to_user_id, debtPerUser,due_date]
     );
   }
 };
 
 export const getMyDebtsWithDetails = async (userId) => {
   const [rows] = await db.query(
-    `SELECT d.id, d.expense_id, d.amount, d.created_at as date,
+    `SELECT d.id, d.expense_id, d.amount, d.created_at as date, d.due_date,
             u.name as to_user_name,
             u.id as to_user_id,
+            u.paypal_email,                     
             e.description,
             g.id as group_id, g.name as group_name,
             f.id as frame_id, f.name as frame_name
@@ -88,11 +89,13 @@ export const getMyDebtsWithDetails = async (userId) => {
   return rows;
 };
 
+
 export const markDebtAsPaid = async (connection, debt_id) => {
   await connection.query(
     `UPDATE debts SET status = 'paid' WHERE id = ?`,
     [debt_id]
   );
 };
+
 
 

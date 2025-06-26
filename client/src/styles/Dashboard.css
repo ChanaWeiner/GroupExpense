@@ -1,60 +1,131 @@
+
+
+.dashboard-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f5f7fa;
+  color: #333;
+}
 .dashboard-header {
   position: relative;
   width: 100%;
-  height: 250px; /* או גובה שמתאים לך */
-  overflow: hidden;
+  height: 200px; /* אפשר לשנות לגובה שנראה טוב */
+  
 }
 
 .dashboard-img {
   width: 100%;
-  height: 100%;
-  object-fit: cover; /* מתאים את התמונה למסגרת */
-  position: absolute;
-  top: 0;
+  height: 100px;
+  object-fit: cover; /* החלק החשוב: חותך את התמונה כך שתמלא את המיכל */
+  position: fixed;
   left: 0;
-  z-index: 0;
-  opacity: 0.7; 
+  right: 0;
 }
 
-.dashboard-title {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  color: black; /* או צבע מתאים לתמונה */
-  font-size: 3rem;
-  font-weight: bold;
-  z-index: 1;
-}
 
+/* ניווט צדדי קבוע בראש */
 .dashboard-nav {
-  background-color: var(--blue); /* צבע רקע */
-  padding: 1rem;
+  position: fixed;
+  top: 100px; /* גובה כותרת */
+  left: 0;
+  right: 0;
+  height: 50px;
+  background-color: white;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  padding: 0 1.5em;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  z-index: 1000;
 }
 
+/* רשימת הקישורים */
 .dashboard-nav ul {
-  display: flex;
-  gap: 2rem;
   list-style: none;
+  display: flex;
+  gap: 1.5em;
   margin: 0;
   padding: 0;
+  flex-grow: 1;
+  align-items: center;
 }
 
-.dashboard-nav li a {
-  color: white;
+/* קישורים */
+.dashboard-nav ul li a {
   text-decoration: none;
-  font-weight: bold;
-  padding: 0.5rem 1rem;
+  color: var(--color-primary);
+  font-weight: 600;
+  padding: 0.5em 0.8em;
   border-radius: 6px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  display: inline-block;
+}
+
+/* אנימציית מעבר כשעוברים עם העכבר */
+.dashboard-nav ul li a:hover {
+  background-color: var(--color-primary);
+  color: white;
+  box-shadow: 0 4px 8px rgba(0,115,255,0.4);
+}
+
+/* אזור הפרופיל וההתנתקות */
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
+
+/* פרופיל משתמש - תמונה וסגנון טקסט */
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  cursor: pointer;
+  color: #555;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.user-profile:hover {
+  color: var(--color-primary);
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--color-primary);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 1em;
+  user-select: none;
+}
+
+/* כפתור התנתקות */
+.logout-button {
+  background-color: var(--color-error);
+  color: white;
+  border: none;
+  padding: 0.5em 1em;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
   transition: background-color 0.3s ease;
 }
 
-.dashboard-nav li a:hover {
-  background-color: #0b5aa0; /* כהה יותר למצב ריחוף */
+.logout-button:hover {
+  background-color: #b00020;
 }
 
-.dashboard-nav li a.active {
-  background-color: #FED52F; /* סימון עמוד פעיל */
-  color: #000;
+/* תוכן הראשי */
+.dashboard-content {
+  margin-top: 110px; /* גובה הכותרת + ניווט */
+  padding: 2em 1.5em;
+  flex-grow: 1;
+  background-color: #f5f7fa;
 }

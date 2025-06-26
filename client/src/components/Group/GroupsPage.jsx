@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import AddGroupForm from './AddGroupForm';
 import { useState, useEffect } from 'react';
 import '../../styles/GroupsPage.css'
-
+import add from '../../img/add.png'
 export default function GroupsPage() {
   const [groups, setGroups] = useState([]);
   const { token } = useAuth();
@@ -13,7 +13,7 @@ export default function GroupsPage() {
   const navigateToPageGroup = useNavigate();
   const [editingGroupId, setEditingGroupId] = useState(null);
   const [newGroupName, setNewGroupName] = useState('');
-  
+
 
   useEffect(() => {
     loadGroups();
@@ -47,9 +47,8 @@ export default function GroupsPage() {
       setError('שגיאה בעדכון שם הקבוצה');
     }
   }
-
   return (
-    <div className="groups-page">
+    <div className="groups-page fadeInAnimation">
       <h2>📋 הקבוצות שלך</h2>
 
       <div className="group-list">
@@ -78,27 +77,36 @@ export default function GroupsPage() {
             ) : (
               <div className="group-name-row">
                 <div className="group-name">{group.name}</div>
-                <button
-                  className="edit-btn"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setEditingGroupId(group.id);
-                    setNewGroupName(group.name);
-                  }}
-                >
-                  ✏️
-                </button>
+                <div className="group-actions">
+                  <button
+                    className="edit-btn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setEditingGroupId(group.id);
+                      setNewGroupName(group.name);
+                    }}
+                  >
+                    ✏️
+                  </button>
+                  <button
+                    className="delete-btn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteGroup(group.id);
+                    }}
+                  >
+                    🗑
+                  </button>
+                </div>
               </div>
             )}
           </div>
         ))}
-
       </div>
-
 
       {error && <p>{error}</p>}
 
-      <button onClick={() => setShowForm(true)}>➕ הוספת קבוצה</button>
+      <button className='add-btn' onClick={() => setShowForm(true)}><img src={add} alt="" width="20px" /> הוספת קבוצה</button>
 
       {showForm && (
         <AddGroupForm

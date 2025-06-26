@@ -1,25 +1,153 @@
+/* עיצוב כללי לרשימת קניות */
+.shopping-list {
+  background: var(--color-background);
+  border-radius: 14px;
+  box-shadow: 0 2px 12px #0073ff11;
+  padding: 2rem 1.5rem;
+  margin: 2rem auto;
+  max-width: 600px;
+  animation: fadeInPage 0.7s cubic-bezier(.4,0,.2,1);
+}
+
+.shopping-list h3 {
+  color: var(--color-primary);
+  text-align: center;
+  margin-bottom: 1.5rem;
+  letter-spacing: 1px;
+}
+
+.shopping-list ul {
+  margin: 0;
+  padding: 0;
+}
+
+.item-card {
+  background: #fff;
+  border: 1.5px solid var(--color-border);
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 6px #0073ff0a;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  animation: fadeInItem 0.5s;
+  transition: box-shadow 0.2s;
+}
+
+.item-card:hover {
+  box-shadow: 0 4px 16px #23ccd522;
+}
+
 .checkbox-label {
   display: flex;
   align-items: center;
-  gap: 0.5em; /* רווח בין ה-checkbox לכתב */
+  gap: 0.7em;
+  font-size: 1.1em;
+  font-weight: 500;
+  color: var(--color-primary);
+  cursor: pointer;
+  user-select: none;
 }
 
-.item-card{
-    background-color: #f9f9f9;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    width: 30%;
+.checkbox-label input[type="checkbox"] {
+  accent-color: var(--color-success);
+  width: 1.2em;
+  height: 1.2em;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
 }
 
-.item-actions{
-    display: flex;
-    gap: 1rem;
+.item-card p {
+  margin: 0.2em 0 0 0;
+  color: var(--color-muted);
+  font-size: 0.97em;
+}
+
+.item-actions {
+  display: flex;
+  gap: 0.5em;
+  margin-top: 0.5em;
+}
+
+.item-actions button {
+  background: var(--color-background);
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  border-radius: 6px;
+  padding: 0.3em 1em;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.item-actions button:hover {
+  background: var(--color-primary);
+  color: #fff;
 }
 
 .purchase-details {
-  transition: all 0.3s ease;
-  direction: rtl;
-  font-size: 0.9rem;
-  color: #333;
+  background: #f8fbff;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  padding: 0.7em 1em;
+  margin-top: 0.5em;
+  color: var(--color-primary);
+  animation: fadeInItem 0.5s;
+}
+
+.shopping-list form {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 1px 6px #0073ff0a;
+  padding: 1em 1.2em;
+  margin-top: 1.5em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7em;
+  animation: fadeInItem 0.5s;
+}
+
+.shopping-list form input[type="text"] {
+  border: 1.5px solid var(--color-primary);
+  border-radius: 6px;
+  padding: 0.6em 1em;
+  font-size: 1em;
+  transition: border-color 0.2s;
+}
+
+.shopping-list form input[type="text"]:focus {
+  border-color: var(--color-accent);
+  outline: none;
+}
+
+.shopping-list form textarea {
+  border: 1.5px solid var(--color-border);
+  border-radius: 6px;
+  padding: 0.6em 1em;
+  font-size: 1em;
+  resize: vertical;
+  transition: border-color 0.2s;
+}
+
+.shopping-list form textarea:focus {
+  border-color: var(--color-accent);
+  outline: none;
+}
+
+.shopping-list .add-btn {
+  align-self: flex-end;
+  margin-top: 0.5em;
+}
+
+/* אנימציות */
+@keyframes fadeInItem {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

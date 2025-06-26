@@ -1,11 +1,10 @@
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import illustration from '../img/illus.jpg';
 import '../styles/Dashboard.css';
 import { useAuth } from './context/AuthContext';
-import { useNavigate } from 'react-router-dom';
 
 export default function DashboardLayout() {
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -13,10 +12,17 @@ export default function DashboardLayout() {
     navigate('/login');
   };
 
+  const handleProfileClick = () => {
+    navigate('/my-account');
+  };
+
+  // הכנת אות ראשונה לשם המשתמש אם אין תמונה
+  const userInitial = user?.name ? user.name.charAt(0).toUpperCase() : '';
+
   return (
     <div className="dashboard-layout" dir="rtl">
       <header className="dashboard-header">
-        <img className="dashboard-img" src={illustration} alt="איור לוח בקרה" />
+        <img className="dashboard-img prominent" src={illustration} alt="איור לוח בקרה" />
       </header>
 
       <nav className="dashboard-nav">
@@ -26,7 +32,15 @@ export default function DashboardLayout() {
           <li><Link to="my-account">החשבון שלי</Link></li>
           {/* ניתן להוסיף קישורים נוספים לפי הצורך */}
         </ul>
-        <button onClick={handleLogout}>התנתקות</button>
+
+        <div className="user-section">
+          <div className="user-profile" onClick={handleProfileClick} title="פרטי משתמש">
+            <div className="user-avatar">{userInitial}</div>
+            <span>{user?.name || 'משתמש'}</span>
+          </div>
+
+          <button className="logout-button" onClick={handleLogout}>התנתקות</button>
+        </div>
       </nav>
 
       <main className="dashboard-content">

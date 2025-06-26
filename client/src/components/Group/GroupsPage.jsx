@@ -57,7 +57,7 @@ export default function GroupsPage() {
           <div
             key={group.id}
             className="group-card"
-            onClick={() => editingGroupId ? null : navigateToPageGroup(`/dashboard/groups/${group.id}`)}
+            onClick={() => editingGroupId ? null : navigateToPageGroup(`${group.id}`)}
           >
             <div className="group-icon">
               {group.name.charAt(0).toUpperCase()}

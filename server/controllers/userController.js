@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { validationResult } from 'express-validator';
-import { createUser, getUserByEmail, updateUserById,searchUsersByEmailOrName,getUserById } from '../models/userModel.js';
+import { createUser, getUserByEmail, updateUserById,searchUsersByEmailOrName,getUserById,checkPaypalAccounts } from '../models/userModel.js';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -108,3 +108,17 @@ export const getUser = async(req,res)=>{
     res.status(500).json({ message: 'שגיאת מסד נתונים' });
   }
 }
+
+
+export const checkPaypalAccountsController = async (req, res) => {
+  try {
+    const fromUserId= req.user.id;
+    const {  toUserId } = req.body;
+    const result = await checkPaypalAccounts(fromUserId, toUserId);
+    res.json(result);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'שגיאה בבדיקת חשבונות PayPal' });
+  }
+};
+

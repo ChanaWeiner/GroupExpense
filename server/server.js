@@ -6,6 +6,8 @@ import groupRoutes from './routes/groupRoutes.js';
 import expenseFrameRoutes from './routes/expenseFrameRoutes.js';
 import expenseRoutes from './routes/expenseRoutes.js';
 import shoppingItemRoutes  from './routes/shoppingItemRoutes.js';
+import debtRoutes  from './routes/debtRoutes.js';
+import paymentRoutes  from './routes/paymentRoutes.js';
 
 import cors from 'cors';
 import path from 'path';
@@ -28,6 +30,8 @@ app.use('/api/groups', groupRoutes);
 app.use('/api/frames', expenseFrameRoutes);
 app.use('/api/expenses', expenseRoutes);
 app.use('/api/shopping-items', shoppingItemRoutes);
+app.use('/api/debts', debtRoutes);
+app.use('/api/payments', paymentRoutes);
 
 
 app.listen(3000, () => {

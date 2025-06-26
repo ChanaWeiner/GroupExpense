@@ -16,14 +16,14 @@ export default function DashboardLayout() {
   return (
     <div className="dashboard-layout" dir="rtl">
       <header className="dashboard-header">
-        <h1 className="dashboard-title">לוח בקרה</h1>
         <img className="dashboard-img" src={illustration} alt="איור לוח בקרה" />
       </header>
 
       <nav className="dashboard-nav">
         <ul>
-          <li><Link to="/dashboard/overview">סקירה</Link></li>
-          <li><Link to="/dashboard/groups">קבוצות</Link></li>
+          <li><Link to="overview">סקירה</Link></li>
+          <li><Link to="groups">קבוצות</Link></li>
+          <li><Link to="my-account">החשבון שלי</Link></li>
           {/* ניתן להוסיף קישורים נוספים לפי הצורך */}
         </ul>
         <button onClick={handleLogout}>התנתקות</button>

@@ -85,7 +85,7 @@ export default function Register() {
 
       if (response.user) {
         login(response.token, response.user);
-        navigate('/dashboard');
+        navigate('/group-expense');
       }
     }
     catch (error) {

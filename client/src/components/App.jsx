@@ -1,5 +1,4 @@
 import React from 'react';
-import PayPalCheckout from './PayPalCheckout';
 import Login from './Login';
 import Register from './Register';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
@@ -12,7 +11,10 @@ import GroupExpenseFrames from './Frame/ExpenseFrames';
 import ExpenseFramePage from './Frame/ExpenseFramePage';
 import GroupSummary from './Group/GroupSummary';
 import RequireAuth from './ProtectedRoutes/RequireAuth';
-import ReceiptUploader from './ReceiptUploader';
+import MyAccountPage from './Account/MyAccountPage';
+import MyDebtsPage from './Account/MyDebtsPage';
+import OwedToMePage from './Account/OwedToMePage';
+import MyExpensesPage from './Account/MyExpensesPage';
 import '../styles/App.css';
 
 export default function App() {
@@ -22,14 +24,13 @@ export default function App() {
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/checkout" element={<PayPalCheckout />} />
-        <Route path="*" element={<div>404 Not Found</div>} />
 
-        <Route path="/dashboard" element={
+        <Route path="/group-expense" element={
           <RequireAuth>
             <DashboardLayout />
           </RequireAuth>
         }>
+          <Route path="" element={<Navigate to="overview" replace />} />
           <Route path="overview" index element={<DashboardOverview />} />
           <Route path="groups" element={<GroupsPage />} />
 
@@ -41,8 +42,15 @@ export default function App() {
             <Route path="summary" element={<GroupSummary />} />
           </Route>
 
-          <Route path="overview/expenses/new" element={<ReceiptUploader />} />
+          <Route path="my-account" element={<MyAccountPage />}>
+            <Route path="my-debts" element={<MyDebtsPage />} />
+            <Route path="owed-to-me" element={<OwedToMePage />} />
+            <Route path="my-expenses" element={<MyExpensesPage />} />
+          </Route>
         </Route>
+
+        <Route path="*" element={<div>404 Not Found</div>} />
+
       </Routes>
     </Router>
   );

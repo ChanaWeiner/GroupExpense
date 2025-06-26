@@ -36,3 +36,22 @@ export async function searchUsersByEmailOrName(query) {
   return rows;
 };
 
+
+export const checkPaypalAccounts = async (fromUserId, toUserId) => {
+  const [rows] = await db.query(
+    `SELECT id, paypal_email FROM users WHERE id IN (?, ?)`,
+    [fromUserId, toUserId]
+  );
+
+  let fromUserHasPaypal = false;
+  let toUserHasPaypal = false;
+
+  for (const user of rows) {
+    if (user.id === fromUserId && user.paypal_email) fromUserHasPaypal = true;
+    if (user.id === toUserId && user.paypal_email) toUserHasPaypal = true;
+  }
+
+  return { fromUserHasPaypal, toUserHasPaypal };
+};
+
+

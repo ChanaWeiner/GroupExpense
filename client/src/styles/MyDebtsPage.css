@@ -1,0 +1,39 @@
+.my-debts-page {
+  max-width: 900px;
+  margin: auto;
+  padding: 2rem;
+  direction: rtl;
+}
+
+.group-header, .frame-header {
+  background: #f1f1f1;
+  padding: 0.8rem;
+  margin: 0.5rem 0;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  border-radius: 6px;
+}
+
+.debts-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+
+.debts-table th, .debts-table td {
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+  text-align: center;
+}
+
+
+button:disabled {
+  background: #ccc;
+  cursor: default;
+}
+
+.selected-row {
+  background-color: #dff0d8; /* צבע ירקרק קליל לשורה נבחרת */
+}

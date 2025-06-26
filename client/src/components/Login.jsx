@@ -67,7 +67,7 @@ export default function Login() {
             setMessage(response.message || 'התחברות הצליחה!');
             if (response.user) {
                 login(response.token, response.user);
-                navigate('/dashboard');
+                navigate('/group-expense');
             }
         }
         catch (error) {

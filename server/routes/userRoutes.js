@@ -1,5 +1,5 @@
 import express from 'express';
-import { register, login,updateUser,searchUsers,getUser  } from '../controllers/userController.js';
+import { register, login,updateUser,searchUsers,getUser,checkPaypalAccountsController  } from '../controllers/userController.js';
 import { registerValidator, loginValidator,updateUserValidator } from '../validators/userValidators.js';
 import { verifyToken } from '../middlewares/authMiddleware.js';
 
@@ -10,6 +10,7 @@ router.post('/login', loginValidator, login);
 router.put('/:id', verifyToken, updateUserValidator, updateUser);
 router.get('/search', verifyToken, searchUsers);
 router.get('/me', verifyToken, getUser);
+router.post('/check-paypal-accounts', verifyToken,checkPaypalAccountsController );
 
 
 export default router;

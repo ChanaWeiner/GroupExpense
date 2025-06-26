@@ -1,9 +1,15 @@
 import db from '../config/db.js';
 
-export const getAllByFrame = async (groupId, frameId) => {
+export const getAllByFrame = async (frameId) => {
   const [rows] = await db.query(
-    `SELECT * FROM expenses WHERE frame_id = ?`,
-    [groupId, frameId]
+    `SELECT e.*, 
+            COUNT(ei.id) AS items_count
+     FROM expenses e
+     RIGHT JOIN expense_items ei ON e.id = ei.expense_id
+     WHERE e.frame_id = ?
+     GROUP BY e.id
+     ORDER BY e.date DESC`,
+    [frameId]
   );
   return rows;
 };
@@ -86,4 +92,12 @@ export const validateItemsBelongToFrame = async (frame_id, items, connection) =>
 
   const validItemIds = rows.map(row => row.id);
   return validItemIds.length === items.length;
+};
+
+export const getUserExpenses = async (user_id) => {
+  const [rows] = await db.query(
+    `SELECT * FROM expenses WHERE paid_by = ?`,
+    [user_id]
+  );
+  return rows;
 };

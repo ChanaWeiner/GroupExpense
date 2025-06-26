@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import sendRequest from '../../services/serverApi';
 import { useAuth } from '../context/AuthContext';
-
+import '../../styles/ExpenseFramePage.css';
 import FrameHeader from './FrameHeader';
 import ExpenseList from './ExpenseList';
 import AddExpenseForm from './AddExpenseForm';
@@ -17,6 +17,7 @@ export default function ExpenseFramePage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [error, setError] = useState(null);
+  const [showAddExpense, setShowAddExpense] = useState(false); // חדש
 
   useEffect(() => {
     async function fetchData() {
@@ -56,8 +57,16 @@ export default function ExpenseFramePage() {
       <FrameHeader frame={frame} total={totalAmount} />
       <FrameSummary total={totalAmount} expenses={expenses} />
       {/* <ExpenseList expenses={expenses} isAdmin={isAdmin} frameId={frameId} onDeleteExpense={id => setExpenses(prev => prev.filter(e => e.id !== id))} /> */}
-      <AddExpenseForm frameId={frameId} onAdd={handleAddExpense} />
-      <ShoppingList frameId={frameId} isAdmin={isAdmin}/>
+      <button
+        className="add-btn"
+        style={{ marginBottom: '1.5rem' }}
+        onClick={() => setShowAddExpense(s => !s)}
+      >
+        {showAddExpense ? 'סגור טופס הוספה' : 'הוסף הוצאה חדשה'}
+      </button>
+      {showAddExpense && (
+        <AddExpenseForm frameId={frameId} onAdd={handleAddExpense} />
+      )}      <ShoppingList frameId={frameId} isAdmin={isAdmin} />
     </div>
   );
 }

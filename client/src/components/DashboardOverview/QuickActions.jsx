@@ -5,15 +5,14 @@ export default function QuickActions() {
   const navigate = useNavigate();
 
   const actions = [
-    { label: 'הוסף הוצאה', path: 'expenses/new', color: '#1376D0' },
-    { label: 'צור קבוצה', path: 'groups/new', color: '#FED52F' },
-    { label: 'הצטרף לקבוצה', path: 'groups/join', color: '#FF5D32' },
-    { label: 'שלח תשלום', path: 'payments/new', color: '#616161' }
+    { label: 'הוסף הוצאה', path: '/group-expense/groups', color: 'var(--color-primary)' },
+    { label: 'צור קבוצה', path: '/group-expense/groups', color: 'var(--color-accent)' },
+    { label: 'שלח תשלום', path: '/group-expense/my-account/my-debts', color: 'var(--color-success)' }
   ];
 
   return (
     <section className="quick-actions" dir="rtl">
-      <h3>פעולות מהירות</h3>
+      <h2>פעולות מהירות</h2>
       <div className="actions-grid">
         {actions.map((action, i) => (
           <button

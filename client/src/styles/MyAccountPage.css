@@ -1,0 +1,54 @@
+.my-account-page {
+  max-width: 700px;
+  margin: 2.5rem auto 0 auto;
+  padding: 2.2rem 1.5rem 2rem 1.5rem;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 2px 18px #0073ff11;
+  min-height: 70vh;
+}
+
+.my-account-page h2 {
+  color: var(--color-primary);
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  letter-spacing: 1px;
+}
+
+.my-account-nav {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.my-account-nav .link {
+  color: var(--color-accent);
+  background: #f5faff;
+  border-radius: 8px;
+  padding: 0.7em 1.4em;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 1px 6px #0073ff0a;
+  transition: background 0.2s, color 0.2s, transform 0.1s;
+  border: 2px solid transparent;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.my-account-nav .link:hover,
+.my-account-nav .link.active {
+  background: linear-gradient(90deg, var(--color-accent), var(--color-primary));
+  color: #fff;
+  border-color: var(--color-primary);
+  transform: translateY(-2px) scale(1.04);
+}
+
+.my-account-content {
+  margin-top: 1.5rem;
+  min-height: 300px;
+  /* אפשר להוסיף padding או עיצוב נוסף כאן */
+}

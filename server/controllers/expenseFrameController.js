@@ -30,9 +30,9 @@ export const getFrame = async (req, res) => {
 
 export const create = async (req, res) => {
 const {group_id}= req.params;
-  const {  name, description } = req.body;
+  const {  name, description,end_date } = req.body;
   try {
-    const result = await createFrame(group_id, name, description);
+    const result = await createFrame(group_id, name, description,end_date);
     res.status(201).json({ message: 'נוצר בהצלחה', id: result.id });
   } catch {
     res.status(500).json({ message: 'שגיאה ביצירה' });

@@ -3,7 +3,7 @@ export default function Reminders({ reminders, isLoading }) {
     return <p>טוען תזכורות...</p>;
   }
 
-  if (!reminders || reminders.length === 0) {
+  if (!reminders || (!reminders.overdueMessages?.length && !reminders.recentPaymentsForUser?.length)) {
     return <p>לא קיימות תזכורות.</p>;
   }
 
@@ -11,12 +11,18 @@ export default function Reminders({ reminders, isLoading }) {
     <section className="reminders" dir="rtl">
       <h3 className="reminders-title">תזכורות</h3>
       <ul className="reminder-list">
-        {reminders.map((reminder, index) => (
-          <li key={index} className="reminder-item">
-            <span className="reminder-text">{reminder.text}</span>
-            <span className="reminder-date">
-              {new Date(reminder.date).toLocaleDateString('he-IL')}
-            </span>
+        {/* תזכורות תשלום */}
+        {reminders.overdueMessages && reminders.overdueMessages.map((msg, idx) => (
+          <li key={`overdue-${idx}`} className="reminder-item reminder-overdue">
+            <span className="reminder-text">{msg}</span>
+            {/* אפשר להוסיף כאן אייקון או עיצוב ייחודי */}
+          </li>
+        ))}
+        {/* הודעות על תשלומים שהתקבלו */}
+        {reminders.recentPaymentsForUser && reminders.recentPaymentsForUser.map((msg, idx) => (
+          <li key={`payment-${idx}`} className="reminder-item reminder-payment">
+            <span className="reminder-text">{msg}</span>
+            {/* אפשר להוסיף כאן אייקון או עיצוב ייחודי */}
           </li>
         ))}
       </ul>

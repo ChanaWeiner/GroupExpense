@@ -51,3 +51,14 @@ export const getNumOfMembersInGroup = async(group_id,connection)=> {
   return rows[0].count;
 }
 
+export const getUserGroupsCount = async(user_id)=> {
+  const [rows] = await db.query(
+    `SELECT COUNT(*) AS count
+    FROM group_members gm
+    JOIN \`groups\` g ON gm.group_id = g.id
+    WHERE gm.user_id = ?`,
+    [user_id]
+  );
+  return rows[0].count;
+}
+

@@ -33,7 +33,7 @@ export async function getRecentDebts(userId, limit = 5) {
   return rows;
 }
 
-export async function getOverdueDebts(userId, days = 14) {
+export async function getDebtsDueSoon(userId, days = 1) {
   const query = `
     SELECT d.*, 
            u_from.name AS from_user_name, 
@@ -45,8 +45,9 @@ export async function getOverdueDebts(userId, days = 14) {
     JOIN expenses e ON d.expense_id = e.id
     WHERE (d.from_user_id = ? OR d.to_user_id = ?)
       AND d.status = 'open'
-      AND d.created_at < NOW() - INTERVAL ? DAY
-    ORDER BY d.created_at ASC
+      AND d.due_date IS NOT NULL
+      AND d.due_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL ? DAY)
+    ORDER BY d.due_date ASC
   `;
   const [rows] = await db.query(query, [userId, userId, days]);
   return rows;
@@ -96,6 +97,55 @@ export const markDebtAsPaid = async (connection, debt_id) => {
     [debt_id]
   );
 };
+
+
+function getDateFilter(filter) {
+  if (filter === '7days') return 'AND d.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)';
+  if (filter === '14days') return 'AND d.created_at >= DATE_SUB(NOW(), INTERVAL 14 DAY)';
+  return '';
+}
+
+export async function getOwedToMeDb(userId, page, pageSize, filter,isPayed=false) {
+  const offset = (page - 1) * pageSize;
+  const dateFilter = getDateFilter(filter);
+
+  // סך הכל חובות (ל-paging)
+  const [countRows] = await db.query(
+    `SELECT COUNT(*) as count
+     FROM debts d
+     WHERE d.to_user_id = ? ${dateFilter}`,
+    [userId]
+  );
+  const totalCount = countRows[0].count;
+  const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
+  const status = isPayed ? 'paid' : 'open';
+  // מביאים את החובות עצמם עם פרטי ההוצאה
+  const [rows] = await db.query(
+    `SELECT d.*, e.description, e.date as expense_date, e.total_amount, e.paid_by, e.note, e.id as expense_id, u.name as debtor_name
+     FROM debts d
+     JOIN expenses e ON d.expense_id = e.id
+     JOIN users u ON d.from_user_id = u.id
+     WHERE d.to_user_id = ? AND d.status = ? ${dateFilter}
+     ORDER BY d.expense_id DESC, d.created_at DESC
+     LIMIT ? OFFSET ?`,
+    [userId,status, pageSize, offset]
+  );
+
+  // עוטפים כל חוב עם פרטי ההוצאה
+  const debts = rows.map(row => ({
+    ...row,
+    expense: {
+      id: row.expense_id,
+      description: row.description,
+      date: row.expense_date,
+      total_amount: row.total_amount,
+      paid_by: row.paid_by,
+      note: row.note,
+    }
+  }));
+
+  return { debts, totalPages };
+}
 
 
 

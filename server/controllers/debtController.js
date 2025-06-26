@@ -1,3 +1,4 @@
+import { getOwedToMeDb } from '../models/debtModel.js';
 import {getMyDebtsWithDetails} from '../models/debtModel.js';
 
 export const getMyDebtsStructured = async (req, res) => {
@@ -47,5 +48,20 @@ export const getMyDebtsStructured = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'שגיאה בשליפת חובות' });
+  }
+};
+
+
+export const getOwedToMe = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const page = Number(req.query.page) || 1;
+    const pageSize = Number(req.query.pageSize) || 10;
+    const filter = req.query.filter || 'all';
+
+    const result = await getOwedToMeDb(userId, page, pageSize, filter);
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: 'שגיאה בטעינת חובות' });
   }
 };

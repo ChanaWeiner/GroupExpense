@@ -1,0 +1,19 @@
+.expense-frame-page {
+  max-width: 900px;
+  margin: 2.5rem auto 0 auto;
+  padding: 0 1.5rem 2rem 1.5rem;
+  min-height: 80vh;
+  background: transparent;
+  /* ממורכזת את הקופסה הראשית בלבד */
+}
+
+/* כל התוכן הפנימי מיושר לימין */
+.frame-header,
+.frame-summary,
+.shopping-list,
+.add-expense-form {
+  text-align: right;
+  direction: rtl;
+  margin: 0.7rem 0;
+  /* אפשר להוריד margin: auto כאן כדי שלא ימרכז את התוכן */
+}

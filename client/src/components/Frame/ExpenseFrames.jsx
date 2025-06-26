@@ -7,7 +7,7 @@ export default function ExpenseFrames() {
   const { groupId } = useParams();
   const {  token } = useAuth();
   const [frames, setFrames] = useState([]);
-  const [newFrame, setNewFrame] = useState({ name: '', description: '' });
+  const [newFrame, setNewFrame] = useState({ name: '', description: '',end_date: '' });
   const [showForm, setShowForm] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [isAdmin, setIsAdmin] = useState(false);
@@ -37,8 +37,9 @@ export default function ExpenseFrames() {
   async function handleAddFrame(e) {
     e.preventDefault();
     try {
-      if (new Date(newFrame.due_date) < new Date()) {
+      if (new Date(newFrame.end_date) < new Date()) {
         setError('יש להכניס תאריך שטרם היה בעבר');
+        return;
       }
       await sendRequest(`/frames/groups/${groupId}`, 'POST', newFrame, token);
       setNewFrame({ name: '', description: '' });

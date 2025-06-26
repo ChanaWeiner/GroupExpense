@@ -13,7 +13,7 @@ export const getExpensesByFrame = async (req, res) => {
   try {
     const data = await expenseModel.getAllByFrame(frame_id);
     res.json(data);
-  } catch {
+  } catch(err) {
     res.status(500).json({ message: "שגיאה בטעינת ההוצאות מהמסגרת" });
   }
 };

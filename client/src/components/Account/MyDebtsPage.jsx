@@ -42,7 +42,7 @@ export default function MyDebtsPage() {
   if (debtsData === null) return <div>טוען...</div>;
   if (debtsData.length === 0) return <div>אין לך חובות פתוחים 🎉</div>;
   return (
-    <div className="my-debts-page">
+    <div className="my-debts-page fadeInAnimation">
       <h2>החובות שלי</h2>
 
       {debtsData.map(group => (

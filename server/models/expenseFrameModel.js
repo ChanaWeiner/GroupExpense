@@ -14,10 +14,10 @@ export async function getFrameById(id) {
   return rows[0];
 }
 
-export async function createFrame(group_id, name, description) {
+export async function createFrame(group_id, name, description,end_date) {
   const [result] = await db.query(
-    "INSERT INTO expense_frames (group_id, name, description) VALUES (?, ?, ?)",
-    [group_id, name, description]
+    "INSERT INTO expense_frames (group_id, name, description,end_date) VALUES (?, ?, ?,?)",
+    [group_id, name, description,end_date]
   );
   return { id: result.insertId };
 }

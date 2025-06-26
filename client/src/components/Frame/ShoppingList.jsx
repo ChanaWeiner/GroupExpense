@@ -12,6 +12,7 @@ export default function ShoppingList({ frameId, isAdmin }) {
   const [editingId, setEditingId] = useState(null);
   const [editValues, setEditValues] = useState({ name: '', note: '' });
   const [expandedItemId, setExpandedItemId] = useState(null);
+  const [showAddForm, setShowAddForm] = useState(false); // חדש
 
   useEffect(() => {
     async function fetchItems() {
@@ -40,6 +41,7 @@ export default function ShoppingList({ frameId, isAdmin }) {
       setItems(prev => [...prev, addedItem]);
       setNewItem('');
       setNewNote('');
+      setShowAddForm(false);
     } catch (err) {
       setError(err.message);
     }
@@ -150,22 +152,31 @@ export default function ShoppingList({ frameId, isAdmin }) {
           </li>
         ))}
       </ul>
+      <button
+        className="add-btn"
+        style={{ marginTop: '1rem' }}
+        onClick={() => setShowAddForm(s => !s)}
+      >
+        {showAddForm ? 'סגור טופס הוספה' : 'הוסף פריט חדש'}
+      </button>
 
-      <form>
-        <input
-          type="text"
-          placeholder="הוסף פריט חדש"
-          value={newItem}
-          onChange={e => setNewItem(e.target.value)}
-        />
-        <textarea
-          placeholder="הוסף הערה לפריט (אופציונלי)"
-          value={newNote}
-          onChange={e => setNewNote(e.target.value)}
-          rows={3}
-        />
-        <button type="button" className="add-btn" onClick={handleAddItem}>הוסף</button>
-      </form>
+      {showAddForm && (
+        <form style={{ marginTop: '1rem' }}>
+          <input
+            type="text"
+            placeholder="הוסף פריט חדש"
+            value={newItem}
+            onChange={e => setNewItem(e.target.value)}
+          />
+          <textarea
+            placeholder="הוסף הערה לפריט (אופציונלי)"
+            value={newNote}
+            onChange={e => setNewNote(e.target.value)}
+            rows={3}
+          />
+          <button type="button" className="add-btn" onClick={handleAddItem}>הוסף</button>
+        </form>
+      )}
     </section>
   );
 }

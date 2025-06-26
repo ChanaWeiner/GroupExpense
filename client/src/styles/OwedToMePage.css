@@ -1,0 +1,90 @@
+.owed-to-me-page {
+  max-width: 700px;
+  margin: 2.5rem auto 0 auto;
+  padding: 2.2rem 1.5rem 2rem 1.5rem;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 2px 18px #0073ff11;
+  min-height: 70vh;
+}
+
+.owed-to-me-page h2 {
+  color: var(--color-success);
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  letter-spacing: 1px;
+}
+
+.owed-to-me-page > div {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.owed-to-me-page button {
+  background: #f5faff;
+  color: var(--color-primary);
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
+  padding: 0.5em 1.2em;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border 0.2s, transform 0.1s;
+}
+
+.owed-to-me-page button.active,
+.owed-to-me-page button:focus {
+  background: linear-gradient(90deg, var(--color-success), var(--color-accent));
+  color: #fff;
+  border-color: var(--color-success);
+  transform: translateY(-2px) scale(1.04);
+}
+
+.owed-to-me-page button:disabled {
+  background: #eee;
+  color: var(--color-muted);
+  cursor: not-allowed;
+}
+
+.debt-expense-group {
+  background: #f8fbff;
+  border-radius: 12px;
+  box-shadow: 0 1px 6px #0073ff0a;
+  margin-bottom: 1.2rem;
+  padding: 1.1em 1.3em;
+  direction: rtl;
+}
+
+.debt-expense-group h4 {
+  color: var(--color-primary);
+  margin-bottom: 0.7em;
+  font-size: 1.1em;
+}
+
+.debt-expense-group ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.debt-expense-group li {
+  padding: 0.5em 0;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-muted);
+  font-size: 1em;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.debt-expense-group li:last-child {
+  border-bottom: none;
+}
+
+.debt-expense-group b {
+  color: var(--color-success);
+  margin-right: 0.3em;
+}

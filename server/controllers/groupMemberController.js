@@ -3,15 +3,14 @@ import * as groupMemberModel from '../models/groupMemberModel.js';
 import { getUserByEmail } from '../models/userModel.js';
 
 export const addGroupMember = async (req, res) => {
-  const { group_id, user_email } = req.body;
-
+  const { user_email } = req.body;
+  const group_id = req.params.group_id || req.params.groupId;
   try {
     // חיפוש המשתמש לפי מייל
     const user = await getUserByEmail(user_email);
     if (!user) {
       return res.status(404).json({ message: "משתמש לא נמצא" });
     }
-
 
     // הוספת המשתמש לפי ה-id שלו
     await groupMemberModel.addMember(group_id, user.id);
@@ -25,7 +24,6 @@ export const addGroupMember = async (req, res) => {
     res.status(500).json({ message: "שגיאה בהוספת חבר" });
   }
 };
-
 
 
 export const removeGroupMember = async (req, res) => {

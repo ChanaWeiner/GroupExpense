@@ -8,16 +8,23 @@ import {
 } from '../controllers/shoppingItemController.js';
 
 import { verifyToken } from '../middlewares/authMiddleware.js';
+import { validateParams, validateBody } from '../middlewares/validateRequest.js';
+import {
+  frameIdParamSchema,
+  itemIdParamSchema,
+  createItemSchema,
+  updateItemSchema
+} from '../validators/itemValidators.js';
 
 const router = express.Router();
 
 // פריטי קניות למסגרת מסוימת
-router.get('/frame/:frame_id', verifyToken, getItemsByFrame);
-router.post('/frame/:frame_id', verifyToken, createItem);
+router.get('/frame/:frame_id', verifyToken, validateParams(frameIdParamSchema), getItemsByFrame);
+router.post('/frame/:frame_id', verifyToken, validateParams(frameIdParamSchema), validateBody(createItemSchema), createItem);
 
 // פעולות לפי מזהה פריט
-router.get('/:id', verifyToken, getItemById);
-router.put('/:id', verifyToken, updateItem);
-router.delete('/:id', verifyToken, deleteItem);
+router.get('/:id', verifyToken, validateParams(itemIdParamSchema), getItemById);
+router.put('/:id', verifyToken, validateParams(itemIdParamSchema), validateBody(updateItemSchema), updateItem);
+router.delete('/:id', verifyToken, validateParams(itemIdParamSchema), deleteItem);
 
 export default router;

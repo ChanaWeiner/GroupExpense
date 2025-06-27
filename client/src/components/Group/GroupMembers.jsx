@@ -77,7 +77,7 @@ export default function GroupMembers({ }) {
         return;
       }
 
-      await sendRequest(`/members/group/${groupId}`, 'POST', { user_email: newMemberEmail, group_id: groupId }, token);
+      await sendRequest(`/members/group/${groupId}`, 'POST', { user_email: newMemberEmail}, token);
       setNewMemberEmail('');
       setShowSuggestions(false);
       loadMembers();

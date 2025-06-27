@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import sendRequest from '../../services/serverApi';
 import { useAuth } from '../context/AuthContext';
 import '../../styles/OwedToMePage.css';
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 2;
 
 export default function OwedToMePage() {
   const { token } = useAuth();

@@ -76,8 +76,8 @@ export default function Login() {
     };
 
     return (
-        <form onSubmit={handleSubmit} noValidate dir="rtl">
-            <h2>התחברות</h2>
+        <form onSubmit={handleSubmit} noValidate dir="rtl" className="auth-form">
+            <h2 className="auth-title">התחברות</h2>
 
             <input
                 name="email"
@@ -86,8 +86,9 @@ export default function Login() {
                 value={formData.email}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                className="auth-input"
             />
-            <p className="error">{errors.email || '\u00A0'}</p>
+            <p className="auth-error">{errors.email || '\u00A0'}</p>
 
             <input
                 name="password"
@@ -96,13 +97,14 @@ export default function Login() {
                 value={formData.password}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                className="auth-input"
             />
-            <p className="error">{errors.password || '\u00A0'}</p>
+            <p className="auth-error">{errors.password || '\u00A0'}</p>
 
-            <button type="submit">התחבר</button>
+            <button type="submit" className="add-btn">התחבר</button>
 
-            {message && <p>{message}</p>}
-            <Link to="/register" className='link'>אין לך חשבון? הירשם כאן</Link>
+            {message && <p className="auth-message">{message}</p>}
+            <Link to="/register" className='auth-link'>אין לך חשבון? הירשם כאן</Link>
         </form>
     );
 }

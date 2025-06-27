@@ -28,7 +28,11 @@ export default async function sendRequest(endpoint, method = "GET", body = null,
 
     if (error.response && error.response.data) {
       const data = error.response.data;
-
+      if (error.response && error.response.status === 403) {
+        alert("הגישה נדחתה. יש להתחבר מחדש.");
+        window.location.href = "/login";
+        return; // כדי להפסיק את המשך הקוד
+      }
       if (data.message) {
         console.error("message:", data.message);
         throw new Error(data.message);

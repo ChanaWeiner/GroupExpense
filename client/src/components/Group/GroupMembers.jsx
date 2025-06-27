@@ -3,7 +3,7 @@ import sendRequest from '../../services/serverApi';
 import { useAuth } from '../context/AuthContext';
 import '../../styles/GroupMembersList.css';
 import { useParams } from 'react-router-dom';
-import md5 from 'blueimp-md5';
+import getGravatarUrl from '../../services/getProfileImg';
 
 export default function GroupMembers({ }) {
   const [members, setMembers] = useState([]);
@@ -13,7 +13,7 @@ export default function GroupMembers({ }) {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const { token, user } = useAuth();
   const { groupId } = useParams();
-  const [isAdmin,setIsAdmin]=useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
 
   useEffect(() => {
     loadMembers();
@@ -22,7 +22,7 @@ export default function GroupMembers({ }) {
 
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
-      if (newMemberEmail.trim()) {
+      if (newMemberEmail.trim() && showSuggestions) {
         fetchSuggestions();
       } else {
         setSearchResults([]);
@@ -30,30 +30,26 @@ export default function GroupMembers({ }) {
     }, 300);
 
     return () => clearTimeout(delayDebounce);
-  }, [newMemberEmail]);
+  }, [newMemberEmail, showSuggestions]);
 
-  function getGravatarUrl(email) {
-    const trimmedEmail = email.trim().toLowerCase();
-    const hash = md5(trimmedEmail);
-    return `https://www.gravatar.com/avatar/${hash}?d=identicon`;
-  }
 
-    async function checkIfAdmin() {
+
+  async function checkIfAdmin() {
     try {
       const response = await sendRequest(`/groups/${groupId}/isAdmin`, 'GET', null, token);
       setIsAdmin(response.isAdmin);
     }
-    catch {
-
+    catch (err) {
+      setError(err);
     }
   }
 
   async function loadMembers() {
     try {
-      const data = await sendRequest(`/groups/${groupId}/members`, 'GET', null, token);
+      const data = await sendRequest(`/members/group/${groupId}`, 'GET', null, token);
       setMembers(data);
-    } catch {
-      setError("שגיאה בטעינת החברים בקבוצה");
+    } catch (err) {
+      setError(err);
     }
   }
 
@@ -70,21 +66,32 @@ export default function GroupMembers({ }) {
   async function handleAddMember() {
     if (!newMemberEmail.trim()) return;
     try {
-      await sendRequest(`/groups/${groupId}/members`, 'POST', { user_email: newMemberEmail, group_id: groupId }, token);
+      if (members.some(member => member.user_email === newMemberEmail)) {
+        setError("חבר זה כבר קיים בקבוצה");
+        return;
+      }
+
+      const emailRegex = /^\S+@\S+\.\S+$/;
+      if (!emailRegex.test(newMemberEmail.trim())) {
+        setError("כתובת דוא\"ל לא תקינה");
+        return;
+      }
+
+      await sendRequest(`/members/group/${groupId}`, 'POST', { user_email: newMemberEmail, group_id: groupId }, token);
       setNewMemberEmail('');
       setShowSuggestions(false);
       loadMembers();
-    } catch {
-      setError("שגיאה בהוספת חבר");
+    } catch(err) {
+      setError(err || "שגיאה בהוספת חבר");
     }
   }
 
   async function handleRemoveMember(memberId) {
     try {
-      await sendRequest(`/groups/${groupId}/members/${memberId}`, 'DELETE', null, token);
+      await sendRequest(`/members/${memberId}/group/${groupId}`, 'DELETE', null, token);
       loadMembers();
-    } catch {
-      setError("שגיאה במחיקת חבר");
+    } catch(err) {
+      setError(err.message || "שגיאה במחיקת חבר");
     }
   }
 
@@ -103,7 +110,10 @@ export default function GroupMembers({ }) {
           type="email"
           placeholder="להוספה של חבר"
           value={newMemberEmail}
-          onChange={e => setNewMemberEmail(e.target.value)}
+          onChange={e => {
+            setNewMemberEmail(e.target.value);
+            setShowSuggestions(true);
+          }}
         />
         <button onClick={handleAddMember}>הוסף חבר</button>
 
@@ -132,7 +142,7 @@ export default function GroupMembers({ }) {
           <span className="member-name">{member.email}</span>
           {member.is_admin && <span className="admin-badge">⭐ מנהל</span>}
 
-          {isAdmin &&(
+          {isAdmin && (
             <button
               className="remove-member-btn"
               onClick={() => handleRemoveMember(member.id)}

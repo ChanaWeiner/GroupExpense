@@ -29,10 +29,20 @@ export const getFrame = async (req, res) => {
 };
 
 export const create = async (req, res) => {
-const {group_id}= req.params;
-  const {  name, description,end_date } = req.body;
+  const { group_id } = req.params;
+  const { name, description, end_date } = req.body;
+  if (!group_id || isNaN(group_id)) {
+    return res.status(400).json({ message: "group_id לא תקין" });
+  }
+  if (!name || typeof name !== 'string' || name.length > 255) {
+    return res.status(400).json({ message: "שם מסגרת לא תקין" });
+  }
+  if (end_date && isNaN(Date.parse(end_date))) {
+    return res.status(400).json({ message: "תאריך סיום לא תקין" });
+  }
+
   try {
-    const result = await createFrame(group_id, name, description,end_date);
+    const result = await createFrame(group_id, name, description, end_date);
     res.status(201).json({ message: 'נוצר בהצלחה', id: result.id });
   } catch {
     res.status(500).json({ message: 'שגיאה ביצירה' });

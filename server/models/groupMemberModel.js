@@ -62,3 +62,32 @@ export const getUserGroupsCount = async(user_id)=> {
   return rows[0].count;
 }
 
+
+export async function userHasExpensesOrDebts(group_id, user_id) {
+  // בדיקת הוצאות של המשתמש בקבוצה
+  const [expenses] = await db.query(
+    `SELECT 1
+     FROM expenses e
+     JOIN expense_frames f ON e.frame_id = f.id
+     JOIN \`groups\` g ON f.group_id = g.id
+     WHERE g.id = ? AND e.paid_by = ?
+     LIMIT 1`,
+    [group_id, user_id]
+  );
+  if (expenses.length > 0) return true;
+
+  // בדיקת חובות של המשתמש בקבוצה (דרך expenses)
+  const [debts] = await db.query(
+    `SELECT 1
+     FROM debts d
+     JOIN expenses e ON d.expense_id = e.id
+     JOIN expense_frames f ON e.frame_id = f.id
+     JOIN \`groups\` g ON f.group_id = g.id
+     WHERE g.id = ? AND (d.from_user_id = ? OR d.to_user_id = ?)
+     LIMIT 1`,
+    [group_id, user_id, user_id]
+  );
+  if (debts.length > 0) return true;
+
+  return false;
+}

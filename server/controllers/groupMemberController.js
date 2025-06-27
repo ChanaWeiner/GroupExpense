@@ -31,21 +31,18 @@ export const addGroupMember = async (req, res) => {
 
 
 export const removeGroupMember = async (req, res) => {
-  const { group_id, user_id } = req.body;
-  const admin_id = req.user.id;
+  const { group_id, id } = req.params;
 
   try {
-    const isAdmin = await groupMemberModel.isGroupAdmin(group_id, admin_id);
-    if (!isAdmin) {
-      return res.status(403).json({ message: "רק מנהל הקבוצה יכול להסיר חברים" });
-    }
-
-    const isMember = await groupMemberModel.isMemberInGroup(group_id, user_id);
+    const isMember = await groupMemberModel.isMemberInGroup(group_id, id);
     if (!isMember) {
       return res.status(404).json({ message: "המשתמש אינו חבר בקבוצה" });
     }
-
-    await groupMemberModel.removeMember(group_id, user_id);
+    const hasExpenses = await groupMemberModel.userHasExpensesOrDebts(group_id, id);
+    if (hasExpenses) {
+      return res.status(400).json({ message: "לא ניתן למחוק חבר שביצע הוצאות או חובות בקבוצה" });
+    }
+    await groupMemberModel.removeMember(group_id, id);
     res.json({ message: "החבר הוסר מהקבוצה" });
 
   } catch (error) {

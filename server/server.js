@@ -8,6 +8,7 @@ import expenseRoutes from './routes/expenseRoutes.js';
 import shoppingItemRoutes  from './routes/shoppingItemRoutes.js';
 import debtRoutes  from './routes/debtRoutes.js';
 import paymentRoutes  from './routes/paymentRoutes.js';
+import memberRoutes  from './routes/memberRoutes.js';
 
 import cors from 'cors';
 import path from 'path';
@@ -32,6 +33,7 @@ app.use('/api/expenses', expenseRoutes);
 app.use('/api/shopping-items', shoppingItemRoutes);
 app.use('/api/debts', debtRoutes);
 app.use('/api/payments', paymentRoutes);
+app.use('/api/members', memberRoutes);
 
 
 app.listen(3000, () => {

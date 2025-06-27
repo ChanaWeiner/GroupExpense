@@ -94,8 +94,8 @@ export default function Register() {
   };
 
   return (
-    <form onSubmit={handleSubmit} noValidate dir="rtl">
-      <h2>הרשמה</h2>
+    <form onSubmit={handleSubmit} noValidate dir="rtl" className="auth-form">
+      <h2 className="auth-title">הרשמה</h2>
 
       <input
         name="name"
@@ -103,8 +103,9 @@ export default function Register() {
         value={formData.name}
         onChange={handleChange}
         onBlur={handleBlur}
+        className="auth-input"
       />
-      <p className="error">{errors.name || '\u00A0'}</p>
+      <p className="auth-error">{errors.name || '\u00A0'}</p>
 
       <input
         name="email"
@@ -113,8 +114,9 @@ export default function Register() {
         value={formData.email}
         onChange={handleChange}
         onBlur={handleBlur}
+        className="auth-input"
       />
-      <p className="error">{errors.email || '\u00A0'}</p>
+      <p className="auth-error">{errors.email || '\u00A0'}</p>
 
       <input
         name="password"
@@ -123,8 +125,9 @@ export default function Register() {
         value={formData.password}
         onChange={handleChange}
         onBlur={handleBlur}
+        className="auth-input"
       />
-      <p className="error">{errors.password || '\u00A0'}</p>
+      <p className="auth-error">{errors.password || '\u00A0'}</p>
 
       <input
         name="confirm_password"
@@ -133,10 +136,11 @@ export default function Register() {
         value={formData.confirm_password}
         onChange={handleChange}
         onBlur={handleBlur}
+        className="auth-input"
       />
-      <p className="error">{errors.confirm_password || '\u00A0'}</p>
+      <p className="auth-error">{errors.confirm_password || '\u00A0'}</p>
 
-      <p>אופציונלי: דוא"ל PayPal</p>
+      <p className="auth-label">אופציונלי: דוא"ל PayPal</p>
       <input
         name="paypal_email"
         type="email"
@@ -144,13 +148,14 @@ export default function Register() {
         value={formData.paypal_email}
         onChange={handleChange}
         onBlur={handleBlur}
+        className="auth-input"
       />
-      <p className="error">{errors.paypal_email || '\u00A0'}</p>
+      <p className="auth-error">{errors.paypal_email || '\u00A0'}</p>
 
-      <button type="submit">הרשמה</button>
+      <button type="submit" className="add-btn">הרשמה</button>
 
-      {message && <p>{message}</p>}
-      <Link to="/login" className='link'>כבר יש לך חשבון? התחבר כאן</Link>
+      {message && <p className="auth-message">{message}</p>}
+      <Link to="/login" className='auth-link'>כבר יש לך חשבון? התחבר כאן</Link>
     </form>
   );
 }

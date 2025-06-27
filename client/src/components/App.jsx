@@ -9,19 +9,20 @@ import GroupPage from './Group/GroupPage';
 import GroupMembers from './Group/GroupMembers';
 import GroupExpenseFrames from './Frame/ExpenseFrames';
 import ExpenseFramePage from './Frame/ExpenseFramePage';
-import GroupSummary from './Group/GroupSummary';
 import RequireAuth from './ProtectedRoutes/RequireAuth';
 import MyAccountPage from './Account/MyAccountPage';
 import MyDebtsPage from './Account/MyDebtsPage';
 import OwedToMePage from './Account/OwedToMePage';
 import MyExpensesPage from './Account/MyExpensesPage';
+import LandingPage from './LandingPage';
 import '../styles/App.css';
 
 export default function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/" element={<Navigate to="/landing" replace />} />
+        <Route path="/landing" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
@@ -34,12 +35,11 @@ export default function App() {
           <Route path="overview" index element={<DashboardOverview />} />
           <Route path="groups" element={<GroupsPage />} />
 
-          {/* מסלול לעמוד קבוצה עם תתי-עמודים */}
           <Route path="groups/:groupId" element={<GroupPage />}>
+            <Route path="" element={<Navigate to="frames" replace />} />
             <Route path="members" element={<GroupMembers />} />
             <Route path="frames" element={<GroupExpenseFrames />} />
             <Route path="frames/:frameId" element={<ExpenseFramePage />} />
-            <Route path="summary" element={<GroupSummary />} />
           </Route>
 
           <Route path="my-account" element={<MyAccountPage />}>

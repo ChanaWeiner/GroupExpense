@@ -51,7 +51,6 @@ export default function ExpenseFrames() {
   }
 
   async function handleDeleteFrame(frameId) {
-    if (!window.confirm('האם למחוק את המסגרת?')) return;
     try {
       await sendRequest(`/expenseFrames/${frameId}`, 'DELETE', null, token);
       fetchFrames();

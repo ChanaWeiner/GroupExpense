@@ -28,9 +28,7 @@ router.delete('/:id', verifyToken, deleteUserGroup);
 router.put('/:id', verifyToken, updateGroupName);
 router.get('/:groupId/isAdmin',verifyToken,checkIfAdmin)
 // חברי קבוצה — תחת /:group_id/members
-router.get('/:group_id/members', verifyToken, getGroupMembers);
-router.post('/:group_id/members', verifyToken, addGroupMember);
-router.delete('/:group_id/members/:member_id', verifyToken, removeGroupMember);
+
 
 
 

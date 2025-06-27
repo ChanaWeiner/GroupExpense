@@ -93,7 +93,7 @@ export const getMyDebtsWithDetails = async (userId) => {
 
 export const markDebtAsPaid = async (connection, debt_id) => {
   await connection.query(
-    `UPDATE debts SET status = 'paid' WHERE id = ?`,
+    `UPDATE debts SET status = 'paid', paid_at = NOW() WHERE id = ?`,
     [debt_id]
   );
 };

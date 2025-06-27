@@ -2,6 +2,7 @@
 import * as expenseModel from '../models/expenseModel.js';
 import * as debtModel from '../models/debtModel.js';
 import * as memberModel from '../models/groupMemberModel.js';
+import * as expenseFrameModel from '../models/expenseFrameModel.js';
 
 import db from '../config/db.js';
 
@@ -45,10 +46,6 @@ export const createExpense = async (req, res) => {
     return res.status(400).json({ message: 'פריטים אינם בפורמט תקין' });
   }
 
-  if (!description || !total_amount || isNaN(total_amount)) {
-    return res.status(400).json({ message: 'שדות חסרים או סכום אינו תקין' });
-  }
-
   if (!Array.isArray(items) || items.length === 0) {
     return res.status(400).json({ message: 'יש לבחור לפחות פריט אחד' });
   }
@@ -60,18 +57,18 @@ export const createExpense = async (req, res) => {
     // ⚠ ולידציה שהסכומים מסתכמים בדיוק לסכום הכולל
     const sumOfItems = items.reduce((sum, item) => sum + parseFloat(item.amount || 0), 0);
     if (Math.abs(sumOfItems - total_amount) > 0.01) {
-      throw new Error('סכום הפריטים אינו תואם לסכום הכולל');
+      res.status(400).json({ message: 'הסכום של הפריטים לא תואם לסכום הכולל' });
     }
 
     // ⚠ ולידציה שהפריטים שייכים למסגרת (עברה למודל)
-    const isValid = await expenseModel.validateItemsBelongToFrame(frame_id, items, connection);
+    const isValid = await expenseModel.validateItemsBelongToFrameAndNotPurchased(frame_id, items, connection);
     if (!isValid) {
-      throw new Error('פריטים מסוימים אינם שייכים למסגרת זו');
+      res.status(400).json({ message: 'יש לבחור פריטים שייכים למסגרת' });
     }
 
     const receipt_path = req.file?.path || null;
 
-    const frame = await expenseModel.getFrameById(frame_id, connection); // כוללת את end_date
+    const frame = await expenseFrameModel.getFrameById(frame_id, connection); // כוללת את end_date
     const due_date = frame?.end_date || null;
 
     const newExpense = await expenseModel.createExpense({
@@ -79,7 +76,6 @@ export const createExpense = async (req, res) => {
       paid_by,
       total_amount,
       description,
-      date: date || new Date().toISOString().split('T')[0],
       receipt_path
     }, connection);
 
@@ -103,38 +99,6 @@ export const createExpense = async (req, res) => {
   }
 };
 
-
-
-// ✅ עדכון הוצאה
-export const updateExpense = async (req, res) => {
-  const { id } = req.params;
-  const updates = req.body;
-
-  try {
-    const success = await update(id, updates);
-    if (success)
-      res.json({ message: "עודכן בהצלחה" });
-    else
-      res.status(404).json({ message: "הוצאה לא נמצאה לעדכון" });
-  } catch {
-    res.status(500).json({ message: "שגיאה בעדכון הוצאה" });
-  }
-};
-
-// ✅ מחיקת הוצאה
-export const deleteExpense = async (req, res) => {
-  const { id } = req.params;
-
-  try {
-    const success = await remove(id);
-    if (success)
-      res.json({ message: "נמחק בהצלחה" });
-    else
-      res.status(404).json({ message: "הוצאה לא נמצאה למחיקה" });
-  } catch {
-    res.status(500).json({ message: "שגיאה במחיקת הוצאה" });
-  }
-};
 
 // ✅ חיפוש הוצאות בתוך מסגרת
 export const searchExpenses = async (req, res) => {

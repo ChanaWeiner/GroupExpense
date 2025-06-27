@@ -1,27 +1,60 @@
+// routes/expensesRoutes.js
 import express from 'express';
+import multer from 'multer';
+
 import {
   createExpense,
   getExpensesByFrame,
   getExpenseById,
-  updateExpense,
-  deleteExpense,
   searchExpenses
 } from '../controllers/expenseController.js';
 
 import { verifyToken } from '../middlewares/authMiddleware.js';
-import multer from 'multer';
-const upload = multer({ dest: 'uploads/' }); // תיקיית שמירת הקבצים
+import { validateParams, validateQuery, validateBody } from '../middlewares/validateRequest.js';
 
+import {
+  frameIdParamSchema,
+  expenseIdParamSchema,
+  groupAndFrameIdParamsSchema,
+  searchExpensesQuerySchema,
+  createExpenseBodySchema
+} from '../validators/expenseValidators.js';
+
+const upload = multer({ dest: 'uploads/' }); // שמירת קבצים זמנית
 const router = express.Router();
 
 // הוצאות לפי מסגרת מסוימת
-router.get('/frame/:frame_id', verifyToken, getExpensesByFrame);
-router.get('/frame/:frame_id/search', verifyToken, searchExpenses);
+router.get(
+  '/frame/:frame_id',
+  verifyToken,
+  validateParams(frameIdParamSchema),
+  getExpensesByFrame
+);
+
+router.get(
+  '/frame/:frame_id/search',
+  verifyToken,
+  validateParams(frameIdParamSchema),
+  validateQuery(searchExpensesQuerySchema),
+  searchExpenses
+);
 
 // פעולה על הוצאה מסוימת
-router.get('/:id', verifyToken, getExpenseById);
-router.post('/group/:group_id/frame/:frame_id',upload.single('receipt'), verifyToken, createExpense);
-router.put('/:id', verifyToken, updateExpense);
-router.delete('/:id', verifyToken, deleteExpense);
+router.get(
+  '/:id',
+  verifyToken,
+  validateParams(expenseIdParamSchema),
+  getExpenseById
+);
+
+// יצירת הוצאה חדשה
+router.post(
+  '/group/:group_id/frame/:frame_id',
+  upload.single('receipt'),
+  verifyToken,
+  validateParams(groupAndFrameIdParamsSchema),
+  validateBody(createExpenseBodySchema),
+  createExpense
+);
 
 export default router;

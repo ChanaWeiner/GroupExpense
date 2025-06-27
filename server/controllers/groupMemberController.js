@@ -12,11 +12,6 @@ export const addGroupMember = async (req, res) => {
       return res.status(404).json({ message: "משתמש לא נמצא" });
     }
 
-    // בדיקה אם המשתמש כבר חבר בקבוצה
-    const alreadyMember = await groupMemberModel.isMemberInGroup(group_id, user.id);
-    if (alreadyMember) {
-      return res.status(409).json({ message: "המשתמש כבר חבר בקבוצה" });
-    }
 
     // הוספת המשתמש לפי ה-id שלו
     await groupMemberModel.addMember(group_id, user.id);
@@ -24,6 +19,9 @@ export const addGroupMember = async (req, res) => {
 
   } catch (error) {
     console.error("שגיאה בהוספת חבר:", error);
+        if (error.code === 'ER_DUP_ENTRY') {
+      return res.status(400).json({ message: "המשתמש כבר חבר בקבוצה" });
+    }
     res.status(500).json({ message: "שגיאה בהוספת חבר" });
   }
 };

@@ -75,3 +75,11 @@ export const remove = async (id) => {
   );
   return result.affectedRows > 0;
 };
+
+export const hasShoppingList = async (frameId) => {
+  const [rows] = await db.query(
+    `SELECT * FROM shopping_items WHERE frame_id = ?`,
+    [frameId]
+  );
+  return rows.length > 0;
+};

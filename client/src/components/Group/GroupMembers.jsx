@@ -40,7 +40,7 @@ export default function GroupMembers({ }) {
       setIsAdmin(response.isAdmin);
     }
     catch (err) {
-      setError(err);
+      setError(err.message);
     }
   }
 
@@ -49,7 +49,7 @@ export default function GroupMembers({ }) {
       const data = await sendRequest(`/members/group/${groupId}`, 'GET', null, token);
       setMembers(data);
     } catch (err) {
-      setError(err);
+      setError(err.message || "שגיאה בטעינת חברים");
     }
   }
 
@@ -82,7 +82,7 @@ export default function GroupMembers({ }) {
       setShowSuggestions(false);
       loadMembers();
     } catch(err) {
-      setError(err || "שגיאה בהוספת חבר");
+      setError(err.message || "שגיאה בהוספת חבר");
     }
   }
 

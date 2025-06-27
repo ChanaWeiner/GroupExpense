@@ -4,32 +4,25 @@ import {
   getUserGroups,
   deleteUserGroup,
   updateGroupName,
-  checkIfAdmin
+  checkIfAdmin,
+  deleteGroupById
 } from '../controllers/groupController.js';
 
+import { verifyToken, isGroupAdmin } from '../middlewares/authMiddleware.js';
+import { validateBody, validateParams } from '../middlewares/validateRequest.js';
 import {
-  getFrames, getFrame, create, update, remove, search
-} from '../controllers/expenseFrameController.js';
-
-import {
-  addGroupMember,
-  removeGroupMember,
-  getGroupMembers,
-  
-} from '../controllers/groupMemberController.js';
-
-import { verifyToken } from '../middlewares/authMiddleware.js';
+  groupCreationSchema,
+  groupUpdateSchema,
+  groupIdParamSchema
+} from '../validators/groupValidators.js';
 
 const router = express.Router();
 
-router.post('', verifyToken, createGroup);
+router.post('', verifyToken, validateBody(groupCreationSchema), createGroup);
 router.get('', verifyToken, getUserGroups);
-router.delete('/:id', verifyToken, deleteUserGroup);
-router.put('/:id', verifyToken, updateGroupName);
-router.get('/:groupId/isAdmin',verifyToken,checkIfAdmin)
-// חברי קבוצה — תחת /:group_id/members
-
-
-
+router.put('/:id', verifyToken, validateParams(groupIdParamSchema), validateBody(groupUpdateSchema), updateGroupName);
+router.get('/:groupId/isAdmin', verifyToken, validateParams(groupIdParamSchema), checkIfAdmin);
+router.post('/:groupId/leave', verifyToken, validateParams(groupIdParamSchema), deleteUserGroup);
+router.delete('/:groupId', verifyToken, validateParams(groupIdParamSchema), isGroupAdmin, deleteGroupById);
 
 export default router;

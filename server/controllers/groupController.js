@@ -1,11 +1,9 @@
 import { create, getGroupsByUserId, deleteGroup, updateGroup,isUserGroupAdmin } from '../models/groupModel.js';
-import { addMember } from '../models/groupMemberModel.js';
-
+import { addMember,removeMember } from '../models/groupMemberModel.js';
+import * as expenseFrameModel from '../models/expenseFrameModel.js';
 export const createGroup = async (req, res) => {
   const { name } = req.body;
   const created_by = req.user?.id;
-
-  if (!name) return res.status(400).send('חסר שם');
 
   try {
     const newGroup = await create(name, created_by);
@@ -28,15 +26,15 @@ export const getUserGroups = async (req, res) => {
 };
 
 export const deleteUserGroup = async (req, res) => {
-  const groupId = req.params.id;
+  const {groupId} = req.params;
   const userId = req.user.id;
 
   try {
-    const success = await deleteGroup(groupId, userId);
+    const success = await removeMember(groupId, userId);
     if (success) {
-      res.json({ message: "הקבוצה נמחקה" });
+      res.json({ message: "משתמש נמחק בהצלחה" });
     } else {
-      res.status(404).json({ message: "הקבוצה לא נמצאה או שאינך הבעלים שלה" });
+      res.status(401).json({ message: "אינך חבר בקבוצה" });
     }
   } catch {
     res.status(500).json({ message: "שגיאת מסד נתונים" });
@@ -47,10 +45,6 @@ export const updateGroupName = async (req, res) => {
   const groupId = req.params.id;
   const userId = req.user.id;
   const { name: newName } = req.body;
-
-  if (!newName) {
-    return res.status(400).json({ message: "חסר שם חדש לקבוצה" });
-  }
 
   try {
     const updated = await updateGroup(groupId, userId, newName);
@@ -75,3 +69,22 @@ export const checkIfAdmin = async (req, res)=>{
     res.status(500).json({ message: 'Server error' });
   }
 }
+
+export const deleteGroupById = async (req, res) => {
+  const groupId = req.params.groupId;
+  const userId = req.user.id;
+  try {
+    const hasExpenseFrames= await expenseFrameModel.getAllFramesByGroup(groupId);
+    if (hasExpenseFrames.length > 0) {
+      return res.status(400).json({ message: "יש מסגרות של הוצאות בקבוצה זו, לא ניתן למחוק" });
+    }
+    const deleted = await deleteGroup(groupId,userId);
+    if (deleted) {
+      res.json({ message: "הקבוצה נמחקה בהצלחה" });
+    } else {
+      res.status(403).json({ message: "אין לך הרשאה למחוק קבוצה זו" });
+    }
+  } catch {
+    res.status(500).json({ message: "שגיאת מסד נתונים בעת מחיקת קבוצה" });
+  }
+};

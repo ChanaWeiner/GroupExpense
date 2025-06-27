@@ -3,17 +3,17 @@ import db from '../config/db.js';
 export const addMember = async (group_id, user_id, is_admin = 0) => {
   await db.query(
     `INSERT INTO group_members (group_id, user_id, is_admin)
-     VALUES (?, ?, ?)
-     ON DUPLICATE KEY UPDATE is_admin = VALUES(is_admin)`,
-    [group_id, user_id, is_admin]
+       VALUES (?, ?, ?)`,
+      [group_id, user_id, is_admin]
   );
 };
 
 export const removeMember = async (group_id, user_id) => {
-  await db.query(
+  const [result] = await db.query(
     'DELETE FROM group_members WHERE group_id = ? AND user_id = ?',
     [group_id, user_id]
   );
+  return result.affectedRows > 0;
 };
 
 export const getMembers = async (group_id) => {

@@ -24,7 +24,7 @@ export default function AddGroupForm({ onGroupCreated, onClose }) {
       setError(null);
       onGroupCreated?.(response.group);
     } catch (err) {
-      setError("שגיאה ביצירת קבוצה");
+      setError(err.message || "שגיאה ביצירת קבוצה");
     } finally {
       setIsSubmitting(false);
     }

@@ -16,7 +16,7 @@ export const verifyToken = (req, res, next) => {
 };
 
 export const isGroupAdmin = async(req,res,next)=>{
-  const groupId = req.params.group_id;
+  const groupId = req.params.group_id || req.params.groupId;
   const userId = req.user.id;
   if (!groupId) return res.status(400).json({ message: 'חסר קבוצה' });
   if (!userId) return res.status(400).json({ message: 'חסר משתמש' });

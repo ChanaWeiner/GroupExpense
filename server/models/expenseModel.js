@@ -22,13 +22,13 @@ export const getById = async (groupId, frameId, expenseId) => {
   return rows[0];
 };
 
-export const createExpense = async ({ frame_id, paid_by, total_amount, description, date, receipt_path }, connection) => {
+export const createExpense = async ({ frame_id, paid_by, total_amount, description, receipt_path, note = '' }, connection) => {
   const [result] = await connection.query(
-    `INSERT INTO expenses (frame_id, paid_by, total_amount, description, date, receipt_url)
-     VALUES ( ?, ?, ?, ?, ?, ?)`,
-    [frame_id, paid_by, total_amount, description, date, receipt_path]
+    `INSERT INTO expenses (frame_id, paid_by, total_amount, description, date, receipt_url, note)
+   VALUES (?, ?, ?, ?, NOW(), ?, ?)`,
+    [frame_id, paid_by, total_amount, description, receipt_path, note]
   );
-  return { id: result.insertId, frame_id, paid_by, total_amount, description, date, receipt_path };
+  return { id: result.insertId, frame_id, paid_by, total_amount, description, date: new Date(), receipt_path };
 };
 
 export const createExpenseItem = async (expense_id, shopping_item_id, amount, connection) => {
@@ -76,7 +76,7 @@ export const search = async (groupId, frameId, query) => {
 
 
 
-export const validateItemsBelongToFrame = async (frame_id, items, connection) => {
+export const validateItemsBelongToFrameAndNotPurchased = async (frame_id, items, connection) => {
   if (!items.length) return false;
 
   // יצירת מחרוזת שאלות לפי מספר הפריטים
@@ -86,7 +86,13 @@ export const validateItemsBelongToFrame = async (frame_id, items, connection) =>
   const conn = connection || db;
 
   const [rows] = await conn.query(
-    `SELECT id FROM shopping_items WHERE frame_id = ? AND id IN (${placeholders})`,
+    `SELECT id 
+    FROM shopping_items 
+    WHERE frame_id = ? 
+     AND id IN (${placeholders})
+     AND NOT EXISTS (
+       SELECT 1 FROM expense_items ei WHERE ei.shopping_item_id = shopping_items.id
+     )`,
     [frame_id, ...items.map(i => i.id)]
   );
 

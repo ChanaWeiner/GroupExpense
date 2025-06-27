@@ -30,7 +30,7 @@ export default function ExpenseFrames() {
       setIsAdmin(response.isAdmin);
     }
     catch (err) {
-      setError(err);
+      setError(err.message);
     }
   }
 
@@ -46,16 +46,16 @@ export default function ExpenseFrames() {
       setShowForm(false);
       fetchFrames();
     } catch (err) {
-      setError(err);
+      setError(err.message);
     }
   }
 
   async function handleDeleteFrame(frameId) {
     try {
-      await sendRequest(`/expenseFrames/${frameId}`, 'DELETE', null, token);
+      await sendRequest(`/frames/${frameId}/group/${groupId}`, 'DELETE', null, token);
       fetchFrames();
     } catch (err) {
-      setError(err);
+      setError(err.message);
     }
   }
 
@@ -78,7 +78,7 @@ export default function ExpenseFrames() {
           <button className='button-primary add-btn' onClick={() => setShowForm(prev => !prev)} >
             {showForm ? 'ביטול' : '+ הוסף מסגרת'}
           </button>
-
+          {error && <p className="error">{error}</p>}
           {showForm && (
             <form onSubmit={handleAddFrame} style={{ marginTop: '1em' }}>
               <div className="form-group">

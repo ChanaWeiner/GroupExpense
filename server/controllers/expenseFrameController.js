@@ -7,6 +7,8 @@ import {
   searchFrames
 } from '../models/expenseFrameModel.js';
 
+import * as shoppingItemModel from '../models/shoppingItemModel.js';
+
 export const getFrames = async (req, res) => {
   const { group_id } = req.params;
   try {
@@ -31,21 +33,20 @@ export const getFrame = async (req, res) => {
 export const create = async (req, res) => {
   const { group_id } = req.params;
   const { name, description, end_date } = req.body;
-  if (!group_id || isNaN(group_id)) {
-    return res.status(400).json({ message: "group_id לא תקין" });
-  }
-  if (!name || typeof name !== 'string' || name.length > 255) {
-    return res.status(400).json({ message: "שם מסגרת לא תקין" });
-  }
-  if (end_date && isNaN(Date.parse(end_date))) {
-    return res.status(400).json({ message: "תאריך סיום לא תקין" });
-  }
+
+  const safeEndDate = end_date ? end_date : null;
 
   try {
-    const result = await createFrame(group_id, name, description, end_date);
+    const result = await createFrame(group_id, name, description, safeEndDate);
     res.status(201).json({ message: 'נוצר בהצלחה', id: result.id });
-  } catch {
-    res.status(500).json({ message: 'שגיאה ביצירה' });
+  } catch (err) {
+    if (err.code === 'ER_DUP_ENTRY' || (err.message && err.message.includes('duplicate'))) {
+      return res.status(400).json({ message: 'שם מסגרת זה כבר קיים בקבוצה' });
+    }
+    if (err.message) {
+      return res.status(400).json({ message: err.message });
+    }
+    res.status(500).json({ message: 'שגיאה ביצירת מסגרת' });
   }
 };
 
@@ -64,6 +65,8 @@ export const update = async (req, res) => {
 export const remove = async (req, res) => {
   const { frame_id } = req.params;
   try {
+    const hasShoppingList = await shoppingItemModel.hasShoppingList(frame_id);
+    if (hasShoppingList) return res.status(400).json({ message: ' לא ניתן למחוק כי יש רשימת קניות' });
     const affected = await deleteFrame(frame_id);
     if (!affected) return res.status(404).json({ message: 'לא נמצא' });
     res.json({ message: 'נמחק בהצלחה' });

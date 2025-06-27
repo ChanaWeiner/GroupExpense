@@ -11,7 +11,7 @@ export default function OwedToMePage() {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all'); // all, 7days, 14days
-
+  const [error, setError] = useState(null);
   useEffect(() => {
     async function fetchDebts() {
       setLoading(true);
@@ -25,6 +25,7 @@ export default function OwedToMePage() {
         setDebts(data.debts);
         setTotalPages(data.totalPages);
       } catch (err) {
+        setError(err.message);
         setDebts([]);
       } finally {
         setLoading(false);
@@ -41,15 +42,16 @@ export default function OwedToMePage() {
   }, {});
 
   return (
-    <div className="owed-to-me-page">
+    <div className="owed-to-me-page" >
       <h2>💰 חייבים לי</h2>
+      {error && <p >{error}</p>}
       <div style={{ margin: '1em 0' }}>
         <button onClick={() => setFilter('all')} className={filter === 'all' ? 'active' : ''}>הכל</button>
         <button onClick={() => setFilter('7days')} className={filter === '7days' ? 'active' : ''}>7 ימים אחרונים</button>
         <button onClick={() => setFilter('14days')} className={filter === '14days' ? 'active' : ''}>14 ימים אחרונים</button>
       </div>
       {loading ? <p>טוען...</p> : (
-        Object.keys(grouped).length === 0 ? <p>אין חובות להצגה.</p> :
+        debts.length === 0 ? <p>אין חובות להצגה.</p> :
         Object.entries(grouped).map(([expenseId, { expense, people }]) => (
           <div key={expenseId} className="debt-expense-group">
             <h4>הוצאה: {expense?.description || expenseId}</h4>

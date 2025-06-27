@@ -20,26 +20,32 @@ export default function ExpenseFramePage() {
   const [showAddExpense, setShowAddExpense] = useState(false); // חדש
 
   useEffect(() => {
-    async function fetchData() {
-      setIsLoading(true);
-      try {
-        const [frameData, expensesData, adminStatus] = await Promise.all([
-          sendRequest(`frames/${frameId}`, 'GET', null, token),
-          sendRequest(`expenses/frame/${frameId}`, 'GET', null, token),
-          sendRequest(`groups/${groupId}/isAdmin`, 'GET', null, token),
-        ]);
-        setFrame(frameData);
-        setExpenses(expensesData);
-        setIsAdmin(adminStatus.isAdmin);
-        setError(null);
-      } catch (err) {
-        setError('שגיאה בטעינת נתוני מסגרת ההוצאות');
-      } finally {
-        setIsLoading(false);
-      }
-    }
+
     fetchData();
   }, [groupId, frameId, token]);
+
+  async function fetchData() {
+    const scrollY = window.scrollY; // שמור את המיקום הנוכחי
+
+    setIsLoading(true);
+    try {
+      const [frameData, expensesData, adminStatus] = await Promise.all([
+        sendRequest(`frames/${frameId}`, 'GET', null, token),
+        sendRequest(`expenses/frame/${frameId}`, 'GET', null, token),
+        sendRequest(`groups/${groupId}/isAdmin`, 'GET', null, token),
+      ]);
+      setFrame(frameData);
+      setExpenses(expensesData);
+      setIsAdmin(adminStatus.isAdmin);
+      setError(null);
+      setShowAddExpense(false);
+    } catch (err) {
+      setError('שגיאה בטעינת נתוני מסגרת ההוצאות');
+    } finally {
+      setIsLoading(false);
+      window.scrollTo({ top: scrollY, behavior: 'auto' });
+    }
+  }
 
   const handleAddExpense = (newExpense) => {
     setExpenses(prev => [...prev, newExpense]);

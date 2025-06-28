@@ -125,8 +125,14 @@ export default function ShoppingList({ frameId, isAdmin }) {
                     </button>
                     {expandedItemId === item.id && (
                       <div className="purchase-details">
-                        <p><strong>תאריך:</strong> {item.purchase_date}</p>
-                        <p><strong>סכום שנקנה:</strong> {item.purchased_amount} ₪</p>
+                        <p>
+                          <strong>תאריך:</strong>{" "}
+                          {new Date(item.purchase_date).toLocaleDateString('he-IL', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                          })}
+                        </p>                        <p><strong>סכום שנקנה:</strong> {item.purchased_amount} ₪</p>
                         {item.expense_description && <p><strong>תיאור ההוצאה:</strong> {item.expense_description}</p>}
                         {item.receipt_url && (
                           <img width="400" src={`http://localhost:3000/${item.receipt_url}`} alt="קבלה" />

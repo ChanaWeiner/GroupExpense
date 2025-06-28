@@ -1,19 +1,29 @@
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import illustration from '../img/illus.jpg';
 import '../styles/Dashboard.css';
+import { useState } from 'react';
 import { useAuth } from './context/AuthContext';
+import EditProfileForm from "./DashboardOverview/EditProfileForm"; // ודאי שהנתיב נכון
 
 export default function DashboardLayout() {
-  const { logout, user } = useAuth();
+  const { logout, user, setUser } = useAuth();
   const navigate = useNavigate();
+  const [showProfileModal, setShowProfileModal] = useState(false);
+
 
   const handleLogout = () => {
-    logout();
     navigate('/login');
+    logout();
   };
 
+
   const handleProfileClick = () => {
-    navigate('/my-account');
+    setShowProfileModal(true);
+  };
+
+
+  const handleCloseModal = () => {
+    setShowProfileModal(false);
   };
 
   // הכנת אות ראשונה לשם המשתמש אם אין תמונה
@@ -42,6 +52,15 @@ export default function DashboardLayout() {
           <button className="logout-button" onClick={handleLogout}>התנתקות</button>
         </div>
       </nav>
+
+      {showProfileModal && (
+        <div className="modal-overlay" onClick={handleCloseModal}>
+          <div className="modal-content" onClick={e => e.stopPropagation()}>
+            <button className="modal-close" onClick={handleCloseModal}>✖</button>
+            <EditProfileForm user={user} onUpdate={setUser} />
+          </div>
+        </div>
+      )}
 
       <main className="dashboard-content">
         <Outlet />

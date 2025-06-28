@@ -35,7 +35,7 @@ export default function DebtList({ recentDebts, isLoading }) {
                     <div className="debt-details">
                       <span className="debt-amount">{amountText}</span>
                       <span className="debt-users">
-                        {user.id === debt.from_user_id
+                        {user.name === debt.from_user_name
                           ? `את/ה 🡐 ${toUser}`
                           : `${fromUser} 🡐 את/ה`}
                       </span>

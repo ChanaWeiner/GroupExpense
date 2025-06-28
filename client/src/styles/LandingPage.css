@@ -1,48 +1,57 @@
 .landing-container {
-  background-color: #f5f7fa;
-  min-height: 100vh;
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background-image: url('../img/illus.jpg'); /* או אם אתה מייבא דרך JS - אפשר לשים בJS */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 30px;
-  direction: rtl;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .landing-content {
+  background: rgba(255, 255, 255, 0.85); /* לבן חצי שקוף כדי להבליט הטקסט */
+  padding: 40px 60px;
+  border-radius: 12px;
+  max-width: 450px;
   text-align: center;
-  max-width: 600px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
 .landing-title {
-  font-size: 36px;
-  color: #2c3e50;
-  margin-bottom: 16px;
+  font-size: 2.8rem;
+  margin-bottom: 20px;
+  color: #222;
+  font-weight: 700;
 }
 
 .landing-description {
-  font-size: 18px;
-  color: #34495e;
-  margin-bottom: 24px;
-}
-
-.landing-image {
-  max-width: 100%;
-  height: auto;
-  margin-bottom: 32px;
+  font-size: 1.15rem;
+  margin-bottom: 30px;
+  color: #444;
+  line-height: 1.5;
 }
 
 .landing-button {
-  background-color: #27ae60;
+  background-color: #007bff;
   color: white;
-  padding: 12px 24px;
-  font-size: 16px;
   border: none;
-  border-radius: 12px;
+  padding: 15px 35px;
+  border-radius: 8px;
+  font-size: 1.2rem;
   cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.2s ease;
+  transition: background-color 0.3s ease;
 }
 
 .landing-button:hover {
-  background-color: #219150;
+  background-color: #0056b3;
+}
+
+/* להסיר תמונת האיור אם היא בתוך ה- JSX */
+.landing-image {
+  display: none;
 }

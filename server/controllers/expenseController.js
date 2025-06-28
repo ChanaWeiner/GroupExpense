@@ -7,6 +7,21 @@ import * as expenseFrameModel from '../models/expenseFrameModel.js';
 import db from '../config/db.js';
 
 
+export const getUserExpenses = async (req, res) => {
+  const userId = req.user.id;
+  const page = parseInt(req.query.page) || 1;
+  const pageSize = parseInt(req.query.pageSize) || 8;
+
+  try {
+    const { expenses, totalPages } = await expenseModel.getUserExpensesWithPaging(userId, page, pageSize);
+    res.json({ expenses, totalPages });
+  } catch (err) {
+    console.error('שגיאה בשליפת הוצאות:', err);
+    res.status(500).json({ message: 'שגיאה בשליפת הוצאות' });
+  }
+};
+
+
 // ✅ שליפה לפי מזהה מסגרת
 export const getExpensesByFrame = async (req, res) => {
   const { frame_id } = req.params;

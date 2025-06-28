@@ -15,13 +15,13 @@ export default function PayPalCheckout({ debt,onSuccess }) {
       purchase_units: [{
         amount: {
           value: debt.amount.toString(),
+          currency_code: 'ILS'
         },
         description: `תשלום על חוב עבור ${debt.description}`
       }]
     });
   }
 
-  // פונקציה כשאושרה הזמנה
   async function handlePaymentSuccess(details) {
     try {
       await sendRequest(
@@ -49,7 +49,7 @@ export default function PayPalCheckout({ debt,onSuccess }) {
   }
 
   return (
-    <PayPalScriptProvider options={{ 'client-id': clientId }}>
+    <PayPalScriptProvider options={{ 'client-id': clientId,currency: 'ILS' }}>
       {paid ? (
         <div className="success-msg">✅ התשלום בוצע בהצלחה</div>
       ) : error ? (

@@ -34,6 +34,10 @@ export const removeGroupMember = async (req, res) => {
     if (!isMember) {
       return res.status(404).json({ message: "המשתמש אינו חבר בקבוצה" });
     }
+    const is_admin= await groupMemberModel.isGroupAdmin(group_id, id);
+    if (is_admin) {
+      return res.status(400).json({ message: "לא ניתן למחוק את מנהל הקבוצה" });
+    }
     const hasExpenses = await groupMemberModel.userHasExpensesOrDebts(group_id, id);
     if (hasExpenses) {
       return res.status(400).json({ message: "לא ניתן למחוק חבר שביצע הוצאות או חובות בקבוצה" });

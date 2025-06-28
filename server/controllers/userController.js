@@ -26,7 +26,7 @@ export const register = async (req, res) => {
     res.status(201).json({
       message: 'המשתמש נוצר בהצלחה',
       token,
-      user: { id: newUser.id, name, email, paypal_email }
+      user: { name, email, paypal_email }
     });
   } catch (error) {
     console.error(error);
@@ -53,7 +53,7 @@ export const login = async (req, res) => {
     const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '1d' });
     res.json({
       token,
-      user: { id: user.id, name: user.name, email: user.email }
+      user: { name: user.name, email: user.email,paypal_email: user.paypal_email }
     });
   } catch (error) {
     console.error(error);
@@ -65,12 +65,11 @@ export const updateUser = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty())
     return res.status(400).json({ errors: errors.array() });
-
-  const { id } = req.params;
-  const { name, email, paypal_email } = req.body;
+  const userId = req.user.id;
+  const { name, paypal_email } = req.body;
 
   try {
-    const result = await updateUserById(id, name, email, paypal_email);
+    const result = await updateUserById(userId, name, paypal_email);
 
     if (result.affectedRows === 0) {
       return res.status(404).json({ message: 'המשתמש לא נמצא' });
@@ -78,7 +77,7 @@ export const updateUser = async (req, res) => {
 
     res.json({ message: 'המשתמש עודכן בהצלחה' });
   } catch (err) {
-    res.status(500).json({ error: 'שגיאת מסד נתונים', details: err });
+    res.status(500).json({ error: 'שגיאת מסד נתונים:'+ err });
   }
 };
 

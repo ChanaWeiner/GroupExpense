@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post('/register', registerValidator, register);
 router.post('/login', loginValidator, login);
-router.put('/:id', verifyToken, updateUserValidator, updateUser);
+router.put('/', verifyToken, updateUserValidator, updateUser);
 router.get('/search', verifyToken, searchUsers);
 router.get('/me', verifyToken, getUser);
 router.post('/check-paypal-accounts', verifyToken,checkPaypalAccountsController );

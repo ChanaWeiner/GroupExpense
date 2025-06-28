@@ -1,5 +1,29 @@
 import db from '../config/db.js';
 
+
+export const getUserExpensesWithPaging = async (userId, page = 1, pageSize = 8) => {
+  const offset = (page - 1) * pageSize;
+
+  // שליפת ההוצאות של המשתמש עם עמודים
+  const [expenses] = await db.query(
+    `SELECT id, description, total_amount, date
+     FROM expenses
+     WHERE paid_by = ?
+     ORDER BY date DESC
+     LIMIT ? OFFSET ?`,
+    [userId, pageSize, offset]
+  );
+
+  // סה"כ עמודים
+  const [[{ count }]] = await db.query(
+    `SELECT COUNT(*) as count FROM expenses WHERE paid_by = ?`,
+    [userId]
+  );
+  const totalPages = Math.max(1, Math.ceil(count / pageSize));
+
+  return { expenses, totalPages };
+};
+
 export const getAllByFrame = async (frameId) => {
   const [rows] = await db.query(
     `SELECT e.*, 

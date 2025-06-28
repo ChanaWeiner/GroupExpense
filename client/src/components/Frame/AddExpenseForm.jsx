@@ -6,12 +6,12 @@ import '../../styles/AddExpenseForm.css';
 import { useParams } from 'react-router-dom';
 
 export default function AddExpenseForm({ frameId, onAdd }) {
-  const {groupId} = useParams();
+  const { groupId } = useParams();
   const { token } = useAuth();
   const [description, setDescription] = useState('');
   const [receiptFile, setReceiptFile] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState([]);
+  const [error, setError] = useState('');
   const [user, setUser] = useState({});
 
   const [shoppingItems, setShoppingItems] = useState([]);
@@ -24,7 +24,11 @@ export default function AddExpenseForm({ frameId, onAdd }) {
     if (file && file.type.startsWith('image/')) {
       const url = URL.createObjectURL(file);
       setReceiptPreview(url);
-    } else {
+    }
+    if (file && file.type === "application/pdf") {
+      setReceiptPreview("PDF"); // תצוגה אחרת
+    }
+    else {
       setReceiptPreview(null);
     }
   }
@@ -182,7 +186,12 @@ export default function AddExpenseForm({ frameId, onAdd }) {
 
       {receiptPreview && (
         <div className="receipt-preview-container">
-          <img src={receiptPreview} alt="תצוגת קבלה" className="receipt-preview-image" />
+          {receiptPreview !== "PDF" && (
+            <img src={receiptPreview} alt="תצוגת קבלה" />
+          )}
+          {receiptPreview === "PDF" && (
+            <p>קובץ PDF צורף</p>
+          )}
         </div>
       )}
       {error && <p className="form-error">{error}</p>}

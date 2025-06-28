@@ -16,7 +16,6 @@ export const loginValidator = [
 
 export const updateUserValidator = [
   body('name').notEmpty().withMessage('יש להזין שם'),
-  body('email').isEmail().withMessage('יש להזין אימייל תקין'),
   body('paypal_email')
     .optional({ checkFalsy: true })
     .isEmail().withMessage('יש להזין אימייל PayPal תקין')

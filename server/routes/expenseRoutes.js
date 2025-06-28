@@ -6,7 +6,8 @@ import {
   createExpense,
   getExpensesByFrame,
   getExpenseById,
-  searchExpenses
+  searchExpenses,
+  getUserExpenses
 } from '../controllers/expenseController.js';
 
 import { verifyToken } from '../middlewares/authMiddleware.js';
@@ -24,6 +25,11 @@ const upload = multer({ dest: 'uploads/' }); // שמירת קבצים זמנית
 const router = express.Router();
 
 // הוצאות לפי מסגרת מסוימת
+
+
+router.get('/my', verifyToken, getUserExpenses);
+
+
 router.get(
   '/frame/:frame_id',
   verifyToken,

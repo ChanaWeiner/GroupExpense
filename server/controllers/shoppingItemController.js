@@ -21,7 +21,7 @@ export const getItemsByFrame = async (req, res) => {
     }
 
     res.json(data);
-  } catch {
+  } catch(err) {
     res.status(500).json({ message: "שגיאה בטעינת רשימת הקניות" });
   }
 };

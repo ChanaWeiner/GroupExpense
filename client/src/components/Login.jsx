@@ -99,6 +99,8 @@ export default function Login() {
                 onBlur={handleBlur}
                 className="auth-input"
             />
+
+            
             <p className="auth-error">{errors.password || '\u00A0'}</p>
 
             <button type="submit" className="add-btn">התחבר</button>

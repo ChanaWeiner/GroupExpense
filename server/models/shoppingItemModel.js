@@ -11,10 +11,14 @@ export const getAllByFrame = async (frameId) => {
       e.date AS purchase_date,
       e.total_amount,
       e.description AS expense_description,
-      e.receipt_url
+      e.receipt_url,
+      u2.name AS paid_by_user,
+      u1.name AS suggested_by_user
     FROM shopping_items si
+    RIGHT JOIN users u1 ON u1.id = si.suggested_by
     LEFT JOIN expense_items ei ON ei.shopping_item_id = si.id
     LEFT JOIN expenses e ON ei.expense_id = e.id
+    LEFT JOIN users u2 ON e.paid_by = u2.id
     WHERE si.frame_id = ?
     `,
     [frameId]

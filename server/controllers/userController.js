@@ -1,9 +1,19 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { validationResult } from 'express-validator';
-import { createUser, getUserByEmail, updateUserById,searchUsersByEmailOrName,getUserById,checkPaypalAccounts } from '../models/userModel.js';
+import { createUser, getUserByEmail, updateUserById, searchUsersByEmailOrName, getUserById, checkPaypalAccounts } from '../models/userModel.js';
 
 const JWT_SECRET = process.env.JWT_SECRET;
+
+const REFRESH_SECRET = process.env.REFRESH_SECRET;
+const REFRESH_EXPIRES = '7d'; // שבוע
+
+// הפקת שני טוקנים
+function generateTokens(userId) {
+  const accessToken = jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: '15m' });
+  const refreshToken = jwt.sign({ id: userId }, REFRESH_SECRET, { expiresIn: REFRESH_EXPIRES });
+  return { accessToken, refreshToken };
+}
 
 // נשארו שמות הפונקציות באנגלית, רק הטקסטים שנשלחים למשתמש תורגמו לעברית
 
@@ -53,8 +63,20 @@ export const login = async (req, res) => {
     const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '1d' });
     res.json({
       token,
-      user: { name: user.name, email: user.email,paypal_email: user.paypal_email }
+      user: { name: user.name, email: user.email, paypal_email: user.paypal_email }
     });
+
+    // const { accessToken, refreshToken } = generateTokens(user.id);
+    // res.cookie("refreshToken", refreshToken, {
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === 'production',
+    //   sameSite: 'Strict',
+    //   maxAge: 7 * 24 * 60 * 60 * 1000, // שבוע
+    // });
+    // res.json({
+    //   token: accessToken,
+    //   user: { name: user.name, email: user.email, paypal_email: user.paypal_email }
+    // });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'שגיאת מסד נתונים' });
@@ -77,7 +99,7 @@ export const updateUser = async (req, res) => {
 
     res.json({ message: 'המשתמש עודכן בהצלחה' });
   } catch (err) {
-    res.status(500).json({ error: 'שגיאת מסד נתונים:'+ err });
+    res.status(500).json({ error: 'שגיאת מסד נתונים:' + err });
   }
 };
 
@@ -96,7 +118,7 @@ export const searchUsers = async (req, res) => {
   }
 };
 
-export const getUser = async(req,res)=>{
+export const getUser = async (req, res) => {
   const id = req.user.id;
   try {
     const user = await getUserById(id);
@@ -111,8 +133,8 @@ export const getUser = async(req,res)=>{
 
 export const checkPaypalAccountsController = async (req, res) => {
   try {
-    const fromUserId= req.user.id;
-    const {  toUserId } = req.body;
+    const fromUserId = req.user.id;
+    const { toUserId } = req.body;
     const result = await checkPaypalAccounts(fromUserId, toUserId);
     res.json(result);
   } catch (err) {

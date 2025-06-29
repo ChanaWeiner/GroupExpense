@@ -117,7 +117,7 @@ export default function ShoppingList({ frameId, isAdmin }) {
                   {item.name}
                 </label>
                 {item.note && <p>הערה: {item.note}</p>}
-
+                <p>הוצע ע"י: {item.suggested_by_user}</p>
                 {item.is_purchased && (
                   <>
                     <button type="button" onClick={() => toggleExpanded(item.id)}>
@@ -132,7 +132,9 @@ export default function ShoppingList({ frameId, isAdmin }) {
                             month: 'long',
                             day: 'numeric',
                           })}
-                        </p>                        <p><strong>סכום שנקנה:</strong> {item.purchased_amount} ₪</p>
+                        </p>                        
+                        <p><strong>סכום שנקנה:</strong> {item.purchased_amount} ₪</p>
+                        <p><strong>נקנה ע"י :</strong> {item.paid_by_user}</p>
                         {item.expense_description && <p><strong>תיאור ההוצאה:</strong> {item.expense_description}</p>}
                         {item.receipt_url && (
                           <img width="400" src={`http://localhost:3000/${item.receipt_url}`} alt="קבלה" />
